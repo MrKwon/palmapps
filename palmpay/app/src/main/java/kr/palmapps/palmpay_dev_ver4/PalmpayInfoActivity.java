@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 public class PalmpayInfoActivity extends AppCompatActivity {
 
+    private final String TAG = "PalmPay 정보";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

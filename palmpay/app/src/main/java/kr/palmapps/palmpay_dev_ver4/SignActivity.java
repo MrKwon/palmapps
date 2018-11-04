@@ -1,12 +1,14 @@
 package kr.palmapps.palmpay_dev_ver4;
 
 import android.content.Intent;
+import android.media.Image;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,10 +33,10 @@ public class SignActivity extends AppCompatActivity implements View.OnClickListe
     EditText user_pw;
 
     Button palm_sign_in;
-    Button palm_id_signup;
-    Button naver_id;
-    Button kakao_id;
-    Button facebook_id;
+    ImageView palm_id_signup;
+    ImageView naver_id;
+    ImageView kakao_id;
+    ImageView facebook_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,24 +51,24 @@ public class SignActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.palm_sign_in :
-                DevLog.d(TAG, "Palm Sign In");
+                DevToast.s(getApplicationContext(), "Palm Sign In");
                 if(emptyChecker(getInputId(), getInputPw())) {
-                    DevLog.d(TAG, "로그인 성공");
+                    DevToast.s(getApplicationContext(), "로그인 성공");
                     startMain();
                 }
                 break;
             case R.id.palm_id_signup :
-                DevLog.d(TAG, "palm");
+                DevToast.s(getApplicationContext(), "PALM ID로 가입");
                 goSignup();
                 break;
             case R.id.naver_id :
-                DevLog.d(TAG, "naver");
+                DevToast.s(getApplicationContext(), "Naver 아이디로 로그인");
                 break;
             case R.id.kakao_id :
-                DevLog.d(TAG, "kakao");
+                DevToast.s(getApplicationContext(), "Kakao 계정으로 로그인");
                 break;
             case R.id.facebook_id :
-                DevLog.d(TAG, "fb");
+                DevToast.s(getApplicationContext(), "FB 아이디로 로그인");
                 break;
         }
     }
@@ -78,16 +80,16 @@ public class SignActivity extends AppCompatActivity implements View.OnClickListe
         palm_sign_in = (Button) findViewById(R.id.palm_sign_in);
         palm_sign_in.setOnClickListener(this);
 
-        palm_id_signup = (Button) findViewById(R.id.palm_id_signup);
+        palm_id_signup = (ImageView) findViewById(R.id.palm_id_signup);
         palm_id_signup.setOnClickListener(this);
 
-        naver_id = (Button) findViewById(R.id.naver_id);
+        naver_id = (ImageView) findViewById(R.id.naver_id);
         naver_id.setOnClickListener(this);
 
-        kakao_id = (Button) findViewById(R.id.kakao_id);
+        kakao_id = (ImageView) findViewById(R.id.kakao_id);
         kakao_id.setOnClickListener(this);
 
-        facebook_id = (Button) findViewById(R.id.facebook_id);
+        facebook_id = (ImageView) findViewById(R.id.facebook_id);
         facebook_id.setOnClickListener(this);
     }
 

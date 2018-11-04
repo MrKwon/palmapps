@@ -29,6 +29,10 @@
     <string name="contact">문의하기</string>
     <string name="team">팀 참여하기</string>
 
+    <!-- 메인 화면 -->
+    <string name="palmorder">PALM 빠른 오더</string>
+    <string name="normalorder">일반 주문</string>
+
     <!-- 권한 화면 -->
     <string name="permission_checking">권한 확인중...</string>
     <string name="permission_setting_title">권한 설정</string>
@@ -43,4 +47,10 @@
     <string name="prev">이전</string>
     <string name="next">다음</string>
     <string name="complete">완료</string>
+
+    <!--함께하기 -->
+    <string name="withme">손바닥 위에서 더 편리한 일들을 할 수 있게 하는 서비스 개발을 목표로 하는 팀 PalmApps입니다.\n 우리 팀의 첫 번째 관심사는 Mobile Payment와 Kiosk 입니다. 지금은 프로토타입을 테스트하는 단계이지만, 아직 이것은 시작에 불과합니다. 우리에게는 더 큰 목표가 있습니다.\n
+스티브 잡스, 래리 페이지, 제프 베조스 등 다양한 IT기업의 창업자들은 차고(Garage)에서 시작하여 스마트폰, 검색엔진, 클라우드 서비스 각 분야에서 세계 최고의 기업을 만들어 냈습니다. 우리 팀이 바로 그 차고(Garage)가 될것 입니다.\n
+우리는 지금보다 더 다양한 구성원으로 이루어진 팀으로 발전해 나가길 원하고 있습니다. 기획자, 개발자, 디자이너 등 다양한 구성원이 만들어내는 시너지는 누구도 무시할 수 없습니다. 우리 팀과 함께하고 싶은 분들은 다음 항목들을 채워 아래의 전달하기 버튼을 클릭해주시면 별도의 연락을 드리겠습니다.
+</string>
 </resources>

@@ -1,5 +1,6 @@
 package kr.palmapps.palmpay_dev_ver4;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -77,19 +78,49 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_coupon) {
-            // Handle the camera action
+            goCoupon();
+
         } else if (id == R.id.nav_orderedlist) {
+            goMyOrdered();
 
         } else if (id == R.id.nav_info) {
+            goPalmpayInfo();
 
         } else if (id == R.id.nav_contact) {
+            goContactUs();
 
         } else if (id == R.id.nav_team) {
+            goTeamJoin();
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void goCoupon() {
+        Intent intent = new Intent(MainActivity.this, CouponActivity.class);
+        startActivity(intent);
+    }
+
+    public void goMyOrdered() {
+        Intent intent = new Intent(MainActivity.this, MyOrderedActivity.class);
+        startActivity(intent);
+    }
+
+    public void goTeamJoin() {
+        Intent intent = new Intent(MainActivity.this, TeamJoinActivity.class);
+        startActivity(intent);
+    }
+
+    public void goContactUs() {
+        Intent intent = new Intent(MainActivity.this, ContactUsActivity.class);
+        startActivity(intent);
+    }
+
+    public void goPalmpayInfo() {
+        Intent intent = new Intent(MainActivity.this, PalmpayInfoActivity.class);
+        startActivity(intent);
     }
 }

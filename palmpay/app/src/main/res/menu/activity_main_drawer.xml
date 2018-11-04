@@ -3,16 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_coupon"
-            android:icon="@drawable/ic_coupon_24dp"
-            android:title="@string/coupon" />
-        <item
-            android:id="@+id/nav_orderedlist"
-            android:icon="@drawable/ic_view_list_black_24dp"
-            android:title="@string/orderedlist" />
-    </group>
+    <item android:title="나의 정보 조회">
+        <menu>
+            <item
+                android:id="@+id/nav_coupon"
+                android:icon="@drawable/ic_coupon_24dp"
+                android:title="@string/coupon" />
+            <item
+                android:id="@+id/nav_orderedlist"
+                android:icon="@drawable/ic_view_list_black_24dp"
+                android:title="@string/orderedlist" />
+        </menu>
+    </item>
 
     <item android:title="About Us">
         <menu>

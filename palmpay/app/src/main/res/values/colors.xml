@@ -13,4 +13,6 @@
     <color name="darkGray">#424242</color>
 
     <color name="palmToastBackground">#D9000000</color>
+
+    <color name="palmOrderButtonPart">#D458F7</color>
 </resources>

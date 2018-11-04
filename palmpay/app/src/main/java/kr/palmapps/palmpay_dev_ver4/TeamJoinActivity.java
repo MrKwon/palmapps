@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 public class TeamJoinActivity extends AppCompatActivity {
 
+    private final String TAG = "팀 참여하기";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

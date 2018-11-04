@@ -6,15 +6,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:gravity="center"
     android:orientation="vertical"
     tools:context=".SignActivity">
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/topLayout"
+        android:layout_marginBottom="@dimen/margin_16"
+        android:src="@drawable/index_logo_colored"/>
 
     <LinearLayout
         android:id="@+id/topLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_16"
+        android:layout_centerInParent="true"
         android:orientation="vertical">
 
         <LinearLayout
@@ -67,44 +75,45 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/topLayout"
         android:layout_margin="@dimen/margin_08"
+        android:layout_centerHorizontal="true"
         android:orientation="horizontal">
 
-        <Button
+        <ImageView
             android:id="@+id/palm_id_signup"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="80dp"
+            android:layout_height="75dp"
             android:layout_marginLeft="@dimen/margin_08"
             android:layout_marginRight="@dimen/margin_08"
-            android:text="Palm" />
+            android:src="@drawable/ic_palm_circle"
+            android:scaleType="fitCenter"/>
 
 
-        <Button
+        <ImageView
             android:id="@+id/naver_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_marginLeft="@dimen/margin_08"
             android:layout_marginRight="@dimen/margin_08"
-            android:text="Naver" />
+            android:src="@drawable/ic_naver_circle"
+            android:scaleType="fitCenter" />
 
-        <Button
+        <ImageView
             android:id="@+id/kakao_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_marginLeft="@dimen/margin_08"
             android:layout_marginRight="@dimen/margin_08"
-            android:text="Kakao" />
+            android:src="@drawable/ic_kakao_circle"
+            android:scaleType="fitCenter" />
 
-        <Button
+        <ImageView
             android:id="@+id/facebook_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_marginLeft="@dimen/margin_08"
             android:layout_marginRight="@dimen/margin_08"
-            android:text="faceB" />
+            android:src="@drawable/ic_fb_circle"
+            android:scaleType="fitCenter" />
 
     </LinearLayout>
 
