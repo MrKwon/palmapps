@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryLight">#EDB7FD</color>
+    <color name="colorPrimary">#D458F7</color>
+    <color name="colorPrimaryDark">#4C0B5F</color>
+    <color name="colorAccent">#D458F7</color>
+
+    <color name="coloredBackground">#D458F7</color>
+
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="darkGray">#424242</color>
+
+    <color name="palmToastBackground">#D9000000</color>
+</resources>

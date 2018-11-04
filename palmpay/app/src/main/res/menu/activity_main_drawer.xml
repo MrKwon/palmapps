@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_coupon"
+            android:icon="@drawable/ic_coupon_24dp"
+            android:title="@string/coupon" />
+        <item
+            android:id="@+id/nav_orderedlist"
+            android:icon="@drawable/ic_view_list_black_24dp"
+            android:title="@string/orderedlist" />
+    </group>
+
+    <item android:title="About Us">
+        <menu>
+            <item
+                android:id="@+id/nav_contact"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/contact" />
+            <item
+                android:id="@+id/nav_team"
+                android:icon="@drawable/ic_group_black_24dp"
+                android:title="@string/team" />
+            <item
+                android:id="@+id/nav_info"
+                android:icon="@drawable/ic_info_black_24dp"
+                android:title="@string/info" />
+        </menu>
+    </item>
+
+</menu>

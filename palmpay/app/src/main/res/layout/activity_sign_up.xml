@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignUpActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomLayout">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_16">
+
+            <LinearLayout
+                android:id="@+id/page_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="@dimen/margin_08">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PalmPay 회원가입"
+                    android:textSize="@dimen/large_text"
+                    android:textColor="@color/black"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/topLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/page_name"
+                android:layout_marginTop="@dimen/margin_08"
+                android:background="@drawable/bg_basic_grey"
+                android:orientation="vertical">
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:background="@drawable/bg_basic_grey">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/AGREE_CONTENT"/>
+
+                </ScrollView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="@dimen/margin_08">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/AGREE_GRANT"
+                        android:textSize="@dimen/small_text"
+                        android:textColor="@color/black"/>
+
+                    <ImageView
+                        android:id="@+id/agree_grant"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:src="@drawable/ic_radio_button_unchecked_grey_24dp"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/midLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/topLayout"
+                android:layout_marginTop="@dimen/margin_16"
+                android:visibility="invisible">
+
+                <LinearLayout
+                    android:id="@+id/idLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_08">
+
+                    <EditText
+                        android:id="@+id/signup_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/ID_signup"
+                        android:focusable="true"
+                        android:textSize="@dimen/medium_text"
+                        android:maxLines="1"
+                        android:inputType="text"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/pwLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/idLayout"
+                    android:layout_marginBottom="@dimen/margin_08">
+
+                    <EditText
+                        android:id="@+id/signup_pw"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/PASSWORD_signup"
+                        android:textSize="@dimen/medium_text"
+                        android:maxLength="16"
+                        android:maxLines="1"
+                        android:inputType="textPassword"/>
+
+                    <ImageView
+                        android:id="@+id/signup_pw_length"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_check_circle_grey_24dp"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/pw2Layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/pwLayout"
+                    android:layout_marginBottom="@dimen/margin_08">
+
+                    <EditText
+                        android:id="@+id/signup_pw2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="비밀번호 확인"
+                        android:textSize="@dimen/medium_text"
+                        android:maxLength="16"
+                        android:maxLines="1"
+                        android:inputType="textPassword"/>
+
+                    <ImageView
+                        android:id="@+id/signup_pw_check"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_check_circle_grey_24dp"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nameLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/pw2Layout"
+                    android:layout_marginBottom="@dimen/margin_08">
+
+                    <EditText
+                        android:id="@+id/signup_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/NAME"
+                        android:textSize="@dimen/medium_text"
+                        android:maxLines="1"
+                        android:inputType="text"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/phoneLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/nameLayout"
+                    android:layout_marginBottom="@dimen/margin_08">
+
+                    <EditText
+                        android:id="@+id/signup_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/PHONE"
+                        android:textSize="@dimen/medium_text"
+                        android:maxLines="1"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible">
+
+        <Button
+            android:id="@+id/do_sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="가입하기"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

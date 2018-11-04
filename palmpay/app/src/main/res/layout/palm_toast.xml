@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/palm_toast"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/toast_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_04"
+        android:padding="@dimen/margin_08"
+        android:text="toast 입니다."
+        android:textSize="@dimen/small_text"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:background="@color/palmToastBackground"/>
+
+</LinearLayout>
