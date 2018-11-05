@@ -9,13 +9,17 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottomLayout">
+    <include layout="@layout/content_main_map" />
 
-
-    </android.support.v7.widget.RecyclerView>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottomLayout"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_shopping_cart_white_24dp"
+        android:visibility="visible"/>
 
     <LinearLayout
         android:id="@+id/bottomLayout"
@@ -23,15 +27,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:background="@color/palmOrderButtonPart">
+        android:background="@color/palmOrderButtonPart"
+        android:visibility="visible">
 
         <Button
+            android:id="@+id/palm_fast_order"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/palmorder"/>
 
         <Button
+            android:id="@+id/normal_order"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
