@@ -64,17 +64,21 @@
             android:id="@+id/palm_sign_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_16"
-            android:text="palm ID로 로그인하기"/>
+            android:layout_marginTop="@dimen/margin_20"
+            android:text="palm ID로 로그인하기"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="@dimen/small_text"
+            android:background="@drawable/btn_rounded_primary"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/bottomLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/topLayout"
-        android:layout_margin="@dimen/margin_08"
+        android:layout_marginTop="@dimen/margin_20"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal">
 
@@ -86,7 +90,6 @@
             android:layout_marginRight="@dimen/margin_08"
             android:src="@drawable/ic_palm_circle"
             android:scaleType="fitCenter"/>
-
 
         <ImageView
             android:id="@+id/naver_id"
