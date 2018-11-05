@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,8 +17,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import kr.palmapps.palmpay_dev_ver4.Fragment.NowOrderlistFragment;
+import kr.palmapps.palmpay_dev_ver4.Handler.BackPressButtonHandler;
 import kr.palmapps.palmpay_dev_ver4.lib.DevLog;
 import kr.palmapps.palmpay_dev_ver4.lib.DevToast;
 
@@ -38,6 +44,12 @@ public class MainActivity extends AppCompatActivity
     Button palm_fast_order;
     Button normal_order;
 
+    // 뒤로가기 한번에 종료되는거 방지
+    BackPressButtonHandler backPressButtonHandler;
+
+    // Layout
+    RelativeLayout now_orderlist;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,9 +59,15 @@ public class MainActivity extends AppCompatActivity
         setViewFloatingButton();
         setViewDrawer();
         setViewBts();
+        setViewLayouts();
+        setBackPressButtonHandler();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        // Layout 설정에 상관없이 시작은 Invisible
+        now_orderlist.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -58,7 +76,8 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            //super.onBackPressed();
+            backPressButtonHandler.onBackPressed();
         }
     }
 
@@ -123,6 +142,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * layout 세팅 메서드
+     */
+    public void setViewLayouts() {
+        now_orderlist = (RelativeLayout) findViewById(R.id.now_orderlist);
+    }
 
     /**
      * Toolbar 세팅 메서드
@@ -155,13 +180,15 @@ public class MainActivity extends AppCompatActivity
             isOpened = false;
             fab.setImageResource(R.drawable.ic_shopping_cart_white_24dp);
             DevToast.s(this, "noworderlist Fragment close");
-            // noworderlist 프래그먼트 클로스
+            // noworderlist 목록 화면 클로스
+            now_orderlist.setVisibility(View.INVISIBLE);
 
         } else if (!isOpened) {
             isOpened = true;
             fab.setImageResource(R.drawable.ic_close_white_24dp);
             DevToast.s(this, "noworderlist Fragment open");
-            // noworderlist 프래그먼트 오픈
+            // noworderlist 목록 화면 오픈
+            now_orderlist.setVisibility(View.VISIBLE);
         }
     }
 
@@ -184,6 +211,13 @@ public class MainActivity extends AppCompatActivity
         palm_fast_order.setOnClickListener(this);
         normal_order = findViewById(R.id.normal_order);
         normal_order.setOnClickListener(this);
+    }
+
+    /**
+     * 뒤로가기 버팅 세팅 메서드
+     */
+    public void setBackPressButtonHandler() {
+        backPressButtonHandler = new BackPressButtonHandler(this);
     }
 
     public void goCoupon() {

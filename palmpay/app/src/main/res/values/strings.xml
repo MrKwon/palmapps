@@ -39,6 +39,10 @@
     <string name="permission_setting_message">앱을 실행하기 위해서는 권한 설정을 해야 합니다!</string>
     <string name="permission_setting_restart">권한을 설정하고 다시 실행해주세요!</string>
 
+    <!--now orderlist fragment-->
+    <string name="now_orderlist_title">장바구니</string>
+
+
     <!-- 공통 -->
     <string name="skip_string">...</string>
     <string name="close">닫기</string>

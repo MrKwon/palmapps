@@ -9,7 +9,9 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <include layout="@layout/content_main_map" />
+    <include layout="@layout/content_main_list" />
+
+    <include layout="@layout/now_orderlist" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
