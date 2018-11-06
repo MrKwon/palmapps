@@ -17,7 +17,7 @@
     <string name="PASSWORD_signup">비밀번호(8~16자 대소문자, 숫자)</string>
     <string name="PASSWORD_check">비밀번호 확인</string>
     <string name="PHONE">전화번호</string>
-    <string name="NAME">이름</string>
+    <string name="NICKNAME">닉네임 (주문자 식별에 사용됩니다.)</string>
     <!--이용약관-->
     <string name="AGREE_CONTENT">이용약관</string>
     <string name="AGREE_GRANT">이용 약관에 동의합니다.</string>

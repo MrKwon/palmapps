@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity
     private final String TAG = this.getClass().getSimpleName();
 
     public Boolean isOpened = false;
+    public Boolean isBeaconDetected = false;
 
     // 화면 요소들
     Toolbar toolbar;
@@ -75,6 +76,13 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if(isOpened){
+            // 장바구니 목록이 열려있으면 장바구니 목록을 닫음
+            isOpened = false;
+            fab.setImageResource(R.drawable.ic_shopping_cart_white_24dp);
+            DevToast.s(this, "noworderlist close");
+            // noworderlist 목록 화면 클로스
+            now_orderlist.setVisibility(View.INVISIBLE);
         } else {
             //super.onBackPressed();
             backPressButtonHandler.onBackPressed();
@@ -179,14 +187,14 @@ public class MainActivity extends AppCompatActivity
         if(isOpened) {
             isOpened = false;
             fab.setImageResource(R.drawable.ic_shopping_cart_white_24dp);
-            DevToast.s(this, "noworderlist Fragment close");
-            // noworderlist 목록 화면 클로스
+            DevToast.s(this, "noworderlist close");
+            // noworderlist 목록 화면 close
             now_orderlist.setVisibility(View.INVISIBLE);
 
         } else if (!isOpened) {
             isOpened = true;
             fab.setImageResource(R.drawable.ic_close_white_24dp);
-            DevToast.s(this, "noworderlist Fragment open");
+            DevToast.s(this, "noworderlist open");
             // noworderlist 목록 화면 오픈
             now_orderlist.setVisibility(View.VISIBLE);
         }

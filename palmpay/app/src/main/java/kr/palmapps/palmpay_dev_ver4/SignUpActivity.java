@@ -80,7 +80,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
 
                     // MainActivity로 넘어감
-                    goMainActivity();
+                    goSignActivity();
                 } else {
                     Toast.makeText(getApplicationContext(), "정보를 모두 입력해주세요", Toast.LENGTH_SHORT).show();
                 }
@@ -133,11 +133,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             midLayout.setVisibility(View.VISIBLE);
             bottomLayout.setVisibility(View.VISIBLE);
             signup_id.clearFocus();
-
-            signup_id.setText("");
-            signup_pw.setText("");
-            signup_pw2.setText("");
-            signup_name.setText("");
+            editTextInitializer();
 
         } else if (!isGrantAgree) {
             isGrantAgree = true;
@@ -145,6 +141,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             midLayout.setVisibility(View.INVISIBLE);
             bottomLayout.setVisibility(View.INVISIBLE);
         }
+    }
+
+    /**
+     * 약관 동의를 해제하면 EditText들을 초기화 시키는 메서드
+     */
+    public void editTextInitializer() {
+        signup_id.setText(null);
+        signup_pw.setText(null);
+        signup_pw2.setText(null);
+        signup_name.setText(null);
+        signup_phone.setText(null);
     }
 
 
@@ -267,9 +274,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         return false;
     }
 
-    public void goMainActivity() {
-        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    public void goSignActivity() {
+        Toast.makeText(getApplicationContext(), signup_name.getText().toString() + "님 회원가입에 성공하셨습니다.", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(SignUpActivity.this, SignActivity.class);
         startActivity(intent);
         finish();
     }

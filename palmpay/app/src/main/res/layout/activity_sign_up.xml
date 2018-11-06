@@ -175,7 +175,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="@string/NAME"
+                        android:hint="@string/NICKNAME"
                         android:textSize="@dimen/medium_text"
                         android:maxLines="1"
                         android:inputType="text"/>
