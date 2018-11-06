@@ -42,6 +42,12 @@
     <!--now orderlist fragment-->
     <string name="now_orderlist_title">장바구니</string>
 
+    <!--RecyclerView Items-->
+    <!--item_partner_list-->
+    <string name="partner_name">상호명</string>
+    <string name="partner_type">업종분류</string>
+    <string name="partner_desc">간략한 소개를 하는 입력란입니다. 30자 내외로 상호명에 대한 내용을 간략히 소</string>
+
 
     <!-- 공통 -->
     <string name="skip_string">...</string>

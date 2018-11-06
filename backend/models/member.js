@@ -21,11 +21,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(11),
       allowNull: false,
     },
-    appruncount: {
+    sex: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    runcount: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       defaultValue: 0,
-    }
+    },
   },
   {
     timestamp: true,
