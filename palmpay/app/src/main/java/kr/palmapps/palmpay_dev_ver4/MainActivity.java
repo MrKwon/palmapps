@@ -3,10 +3,8 @@ package kr.palmapps.palmpay_dev_ver4;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,11 +15,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import kr.palmapps.palmpay_dev_ver4.Fragment.NowOrderlistFragment;
+import java.util.ArrayList;
+
+import kr.palmapps.palmpay_dev_ver4.Adapter.PartnerRecyclerViewAdapter;
 import kr.palmapps.palmpay_dev_ver4.Handler.BackPressButtonHandler;
+import kr.palmapps.palmpay_dev_ver4.Item.PartnerListItem;
 import kr.palmapps.palmpay_dev_ver4.lib.DevLog;
 import kr.palmapps.palmpay_dev_ver4.lib.DevToast;
 
@@ -34,12 +36,13 @@ public class MainActivity extends AppCompatActivity
     private final String TAG = this.getClass().getSimpleName();
 
     public Boolean isOpened = false;
-    public Boolean isBeaconDetected = false;
+    public Boolean isBeaconDetected = true;
 
     // 화면 요소들
     Toolbar toolbar;
     FloatingActionButton fab;
     DrawerLayout drawer;
+    LinearLayout bottomLayout;
 
     // 버튼들
     Button palm_fast_order;
@@ -50,6 +53,12 @@ public class MainActivity extends AppCompatActivity
 
     // Layout
     RelativeLayout now_orderlist;
+
+    // RecyclerView
+    RecyclerView recyclerView;
+    RecyclerView.LayoutManager layoutManager;
+
+    ArrayList<PartnerListItem> partnerList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +71,7 @@ public class MainActivity extends AppCompatActivity
         setViewBts();
         setViewLayouts();
         setBackPressButtonHandler();
+        setContent(isBeaconDetected);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -155,6 +165,7 @@ public class MainActivity extends AppCompatActivity
      */
     public void setViewLayouts() {
         now_orderlist = (RelativeLayout) findViewById(R.id.now_orderlist);
+        bottomLayout = (LinearLayout) findViewById(R.id.bottomLayout);
     }
 
     /**
@@ -220,6 +231,55 @@ public class MainActivity extends AppCompatActivity
         normal_order = findViewById(R.id.normal_order);
         normal_order.setOnClickListener(this);
     }
+
+
+    /**
+     * content 안에 표시할 내용을 정의하는 메서드
+     * isDetected 의 상태에 따라 표시하는 리스트가 달라짐
+     * false 일 경우 PartnerRecyclerView 가
+     * true 일 경우 MenuRecyclerView 가 표시됨
+     * @param bool isDetected 가 들어감
+     */
+    public void setContent(Boolean bool) {
+        if (bool) {
+            // beacon detected
+            controlButtonsTransparent(bool);
+        } else {
+            // beacon undetected
+            setPartnerRecyclerView();
+            controlButtonsTransparent(bool);
+        }
+    }
+
+    public void setPartnerRecyclerView() {
+        devVersionArrayList();
+
+        recyclerView = findViewById(R.id.content_main_recycler);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        PartnerRecyclerViewAdapter partnerRecyclerView = new PartnerRecyclerViewAdapter(partnerList);
+        recyclerView.setAdapter(partnerRecyclerView);
+    }
+
+    public void devVersionArrayList() {
+        PartnerListItem item = new PartnerListItem("상호명", "카페/식당", "프론트 독립의 리스트");
+        for(int i = 0; i < 10; i++){
+            partnerList.add(item);
+        }
+    }
+
+    public void controlButtonsTransparent(Boolean bool) {
+        if (bool) {
+            fab.setVisibility(View.VISIBLE);
+            bottomLayout.setVisibility(View.VISIBLE);
+        } else {
+            fab.setVisibility(View.INVISIBLE);
+            bottomLayout.setVisibility(View.INVISIBLE);
+        }
+    }
+
 
     /**
      * 뒤로가기 버팅 세팅 메서드
