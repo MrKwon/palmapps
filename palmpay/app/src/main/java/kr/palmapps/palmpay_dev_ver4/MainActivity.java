@@ -374,13 +374,19 @@ public class MainActivity extends AppCompatActivity
         return false;
     }
 
+    /**
+     * ActionBar 세팅 메서드
+     * isBeaconDetect 가 false 일 경우는 PLAM PAY HOME 이 param 으로 들어가고
+     * isBeaconDetect 가 true 일 경우는 @상호명을 DB에서 받아와 param 으로 들어감
+     * @param string isBeaconDetect에 따라 달라지는 string
+     */
     public void setToolBarString(String string) {
         getSupportActionBar().setTitle(string);
     }
 
 
     /**
-     * 뒤로가기 버팅 세팅 메서드
+     * 뒤로가기 버튼 세팅 메서드
      */
     public void setBackPressButtonHandler() {
         backPressButtonHandler = new BackPressButtonHandler(this);
