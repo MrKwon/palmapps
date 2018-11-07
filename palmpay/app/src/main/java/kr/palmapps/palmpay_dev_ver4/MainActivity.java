@@ -1,8 +1,11 @@
 package kr.palmapps.palmpay_dev_ver4;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -21,8 +24,12 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import kr.palmapps.palmpay_dev_ver4.Adapter.MenuRecyclerViewAdapter;
+import kr.palmapps.palmpay_dev_ver4.Adapter.OrderlistRecyclerViewAdapter;
 import kr.palmapps.palmpay_dev_ver4.Adapter.PartnerRecyclerViewAdapter;
 import kr.palmapps.palmpay_dev_ver4.Handler.BackPressButtonHandler;
+import kr.palmapps.palmpay_dev_ver4.Item.MenuListItem;
+import kr.palmapps.palmpay_dev_ver4.Item.OrderListItem;
 import kr.palmapps.palmpay_dev_ver4.Item.PartnerListItem;
 import kr.palmapps.palmpay_dev_ver4.lib.DevLog;
 import kr.palmapps.palmpay_dev_ver4.lib.DevToast;
@@ -53,12 +60,21 @@ public class MainActivity extends AppCompatActivity
 
     // Layout
     RelativeLayout now_orderlist;
+    RelativeLayout main_container;
 
     // RecyclerView
-    RecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager;
+    RecyclerView recyclerView_partner;
+    RecyclerView.LayoutManager layoutManager_partner;
+
+    RecyclerView recyclerView_order;
+    RecyclerView.LayoutManager layoutManager_order;
+
+    RecyclerView recyclerView_menu;
+    RecyclerView.LayoutManager layoutManager_menu;
 
     ArrayList<PartnerListItem> partnerList = new ArrayList<>();
+    ArrayList<OrderListItem> orderList = new ArrayList<>();
+    ArrayList<MenuListItem> menuList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +181,7 @@ public class MainActivity extends AppCompatActivity
      */
     public void setViewLayouts() {
         now_orderlist = (RelativeLayout) findViewById(R.id.now_orderlist);
+        main_container = (RelativeLayout) findViewById(R.id.main_container);
         bottomLayout = (LinearLayout) findViewById(R.id.bottomLayout);
     }
 
@@ -208,6 +225,7 @@ public class MainActivity extends AppCompatActivity
             DevToast.s(this, "noworderlist open");
             // noworderlist 목록 화면 오픈
             now_orderlist.setVisibility(View.VISIBLE);
+            setOrderlistRecyclerView();
         }
     }
 
@@ -243,33 +261,78 @@ public class MainActivity extends AppCompatActivity
     public void setContent(Boolean bool) {
         if (bool) {
             // beacon detected
-            controlButtonsTransparent(bool);
+            setToolBarString("@상호명");
+            setMenuListRecyclerView();
+            controlButtonsTransparent(isOrderExist(orderList));
         } else {
             // beacon undetected
+            setToolBarString("PALM PAY HOME");
             setPartnerRecyclerView();
             controlButtonsTransparent(bool);
         }
     }
 
+    /**
+     * PartnerRecyclerView를 세팅하는 메서드
+     */
     public void setPartnerRecyclerView() {
-        devVersionArrayList();
+        dev_VersionArrayList();
 
-        recyclerView = findViewById(R.id.content_main_recycler);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView_partner = findViewById(R.id.content_main_recycler);
+        recyclerView_partner.setHasFixedSize(true);
+        layoutManager_partner = new LinearLayoutManager(this);
+        recyclerView_partner.setLayoutManager(layoutManager_partner);
 
         PartnerRecyclerViewAdapter partnerRecyclerView = new PartnerRecyclerViewAdapter(partnerList);
-        recyclerView.setAdapter(partnerRecyclerView);
+        recyclerView_partner.setAdapter(partnerRecyclerView);
     }
 
-    public void devVersionArrayList() {
-        PartnerListItem item = new PartnerListItem("상호명", "카페/식당", "프론트 독립의 리스트");
-        for(int i = 0; i < 10; i++){
-            partnerList.add(item);
+    public void setOrderlistRecyclerView() {
+        if (orderList.size() != 0) {
+            recyclerView_order = findViewById(R.id.now_orderlist_recycler);
+            recyclerView_order.setHasFixedSize(true);
+            layoutManager_order = new LinearLayoutManager(this);
+            recyclerView_order.setLayoutManager(layoutManager_order);
+
+            OrderlistRecyclerViewAdapter orderlistRecyclerViewAdapter = new OrderlistRecyclerViewAdapter(orderList);
+            recyclerView_order.setAdapter(orderlistRecyclerViewAdapter);
         }
     }
 
+    public void setMenuListRecyclerView() {
+        dev_VersionMenuList();
+
+        recyclerView_menu = findViewById(R.id.content_main_recycler);
+        recyclerView_menu.setLayoutManager(new GridLayoutManager(this, 2));
+
+        MenuRecyclerViewAdapter menuRecyclerViewAdapter = new MenuRecyclerViewAdapter(menuList);
+        recyclerView_menu.setAdapter(menuRecyclerViewAdapter);
+    }
+
+    /**
+     * 서버와 연결하기 전 데이터를 임의로 생성하는 메서드
+     */
+    public void dev_VersionArrayList() {
+        PartnerListItem items;
+        for(int i = 0; i < 3; i++){
+            items = new PartnerListItem("상호명" + String.valueOf(i), "카페/식당", "데이터베이스 연결이 되어있지 않은 리스트입니다.");
+            partnerList.add(items);
+        }
+    }
+
+    public void dev_VersionMenuList() {
+        MenuListItem items;
+        for(int i = 0; i < 5; i++) {
+            items = new MenuListItem("메뉴 " + String.valueOf(i), "100", "0");
+            menuList.add(items);
+        }
+    }
+
+    /**
+     * button 부분을 보이게 할지 말지 결정하는 메서드
+     * button 부분은 장바구니에 무언가 담겨있을 때 생성된다.
+     * @param bool true일 경우 보이고, false 일 경우 보이지 않는다
+     */
     public void controlButtonsTransparent(Boolean bool) {
         if (bool) {
             fab.setVisibility(View.VISIBLE);
@@ -278,6 +341,24 @@ public class MainActivity extends AppCompatActivity
             fab.setVisibility(View.INVISIBLE);
             bottomLayout.setVisibility(View.INVISIBLE);
         }
+    }
+
+    /**
+     * orderlist 존재 여부에 따라 boolean을 반환
+     * 이 메소드는 하단 버튼부(bottomLayout)과 floatingbtn의 visibility를 결정하기 위해 만듦
+     * @param list 확인할 orderlist
+     * @return 존재하면 true를 반환하고 존재하지 않으면 false를 반환
+     */
+    public Boolean isOrderExist(ArrayList<OrderListItem> list) {
+        if (list.size() != 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void setToolBarString(String string) {
+        toolbar.setTitle(string);
     }
 
 
@@ -312,4 +393,30 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(MainActivity.this, PalmpayInfoActivity.class);
         startActivity(intent);
     }
+
+//    public void dev_isBeaconDetectedController() {
+//        // 비콘 인식 구현 이전에 루틴 컨트롤을 위해
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//
+//        builder.setTitle("isBeaconDetected")
+//                .setMessage("isBeaconDetected Controller")
+//                .setCancelable(false)
+//                .setPositiveButton("true", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        isBeaconDetected = true;
+//                        finish();
+//                    }
+//                })
+//                .setNegativeButton("false", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        isBeaconDetected = false;
+//                        finish();
+//                    }
+//                });
+//
+//        AlertDialog dialog = builder.create();
+//        dialog.show();
+//    }
 }

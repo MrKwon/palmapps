@@ -48,6 +48,16 @@
     <string name="partner_type">업종분류</string>
     <string name="partner_desc">간략한 소개를 하는 입력란입니다. 30자 내외로 상호명에 대한 내용을 간략히 소</string>
 
+    <!--item_order_list-->
+    <string name="order_name">\@메뉴명</string>
+    <string name="order_each_price">\@단가</string>
+    <string name="order_count">\@수량</string>
+    <string name="order_total_price">\@총가격</string>
+
+    <!--item_menu_list-->
+    <string name="menu_name">\@메뉴명</string>
+    <string name="menu_price">\@단가</string>
+    <string name="menu_count">0</string>
 
     <!-- 공통 -->
     <string name="skip_string">...</string>

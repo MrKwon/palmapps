@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/menu_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card:cardUseCompatPadding="true"
+    card:cardCornerRadius="3dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/menu_img"
+            android:layout_width="175dp"
+            android:layout_height="175dp"
+            android:src="@drawable/ic_photo_black_24dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"/>
+
+        <TextView
+            android:id="@+id/menu_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_04"
+            android:text="@string/menu_name"
+            android:textSize="@dimen/medium_text"
+            android:textColor="@color/black"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/menu_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_04"
+            android:text="@string/menu_price"
+            android:textSize="@dimen/medium_text"
+            android:textColor="@color/black"
+            android:gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/menu_remove"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_remove_circle_outline_darkgrey_24dp"/>
+
+            <TextView
+                android:id="@+id/menu_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/menu_count"
+                android:textSize="@dimen/medium_text"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:background="@drawable/bg_basic_grey"/>
+
+            <ImageView
+                android:id="@+id/menu_add"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_add_circle_outline_darkgrey_24dp"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+</android.support.v7.widget.CardView>

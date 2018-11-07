@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('member_info' , {
+  return sequelize.define('member_info', {
     email: {
       type: DataTypes.STRING(50),
       allowNull: false,
@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(16),
       allowNull: false,
     },
-    name: {
+    username: {
       type:DataTypes.STRING(10),
       allowNull: false,
     },
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       defaultValue: 0,
-    },
+    }
   },
   {
     timestamp: true,
