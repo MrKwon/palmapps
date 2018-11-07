@@ -1,5 +1,6 @@
 package kr.palmapps.palmpay_dev_ver4;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -73,8 +74,9 @@ public class MainActivity extends AppCompatActivity
     RecyclerView.LayoutManager layoutManager_menu;
 
     ArrayList<PartnerListItem> partnerList = new ArrayList<>();
-    ArrayList<OrderListItem> orderList = new ArrayList<>();
     ArrayList<MenuListItem> menuList = new ArrayList<>();
+
+    ArrayList<OrderListItem> orderList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,9 +94,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        // Layout 설정에 상관없이 시작은 Invisible
-        now_orderlist.setVisibility(View.INVISIBLE);
+        initVisibilities();
     }
 
     @Override
@@ -273,6 +273,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
+     * init visibility layout들 속성에 관계없이 시작할 때 visibility 가 false 인 요소들은
+     * 모두 invisible 로 변경하고 시작함
+     */
+    public void initVisibilities() {
+        // Layout 설정에 상관없이 시작은 Invisible
+        now_orderlist.setVisibility(View.INVISIBLE);
+        bottomLayout.setVisibility(View.INVISIBLE);
+        fab.setVisibility(View.INVISIBLE);
+    }
+
+    /**
      * PartnerRecyclerView를 세팅하는 메서드
      */
     public void setPartnerRecyclerView() {
@@ -305,7 +316,13 @@ public class MainActivity extends AppCompatActivity
         recyclerView_menu = findViewById(R.id.content_main_recycler);
         recyclerView_menu.setLayoutManager(new GridLayoutManager(this, 2));
 
-        MenuRecyclerViewAdapter menuRecyclerViewAdapter = new MenuRecyclerViewAdapter(menuList);
+        MenuRecyclerViewAdapter menuRecyclerViewAdapter = new MenuRecyclerViewAdapter(menuList/*, new MenuRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+                DevToast.s(getApplicationContext(), String.valueOf(position) + " add button clicked");
+            }
+        }*/);
         recyclerView_menu.setAdapter(menuRecyclerViewAdapter);
     }
 
@@ -358,7 +375,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setToolBarString(String string) {
-        toolbar.setTitle(string);
+        getSupportActionBar().setTitle(string);
     }
 
 
