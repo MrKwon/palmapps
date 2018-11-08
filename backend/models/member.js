@@ -30,10 +30,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0,
     }
-  },
-  {
-    timestamp: true,
-    paranoid: true,
-    tableName: true,
+  }, {
+    // timestamps: true,
+    // paranoid: true,
+    // tableName: true,
   });
 };

@@ -1,9 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('orderlist', {
     menu: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(10),
       allowNull: false,
-
+      unique: true,
     },
     count: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0,
     },
   }, {
-    timestamp: true,
-    paranoid: true,
+    // timestamps: true,
+    // paranoid: true,
   });
 };

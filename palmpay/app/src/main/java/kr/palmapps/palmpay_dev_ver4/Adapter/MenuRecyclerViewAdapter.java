@@ -10,11 +10,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import kr.palmapps.palmpay_dev_ver4.Item.MenuListItem;
 import kr.palmapps.palmpay_dev_ver4.Item.OrderListItem;
+import kr.palmapps.palmpay_dev_ver4.lib.MyApp;
 import kr.palmapps.palmpay_dev_ver4.R;
 import kr.palmapps.palmpay_dev_ver4.lib.DevLog;
+
+import static kr.palmapps.palmpay_dev_ver4.MainActivity.orderlist;
 
 
 public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerViewAdapter.MenuItemViewHolder> {
@@ -41,25 +45,8 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         final int count = Integer.parseInt(items.get(position).getMenu_count());
 
         holder.menu_name.setText(items.get(position).getMenu_name());
-        holder.menu_price.setText(String.valueOf(count) + " 원");
+        holder.menu_price.setText(String.valueOf(count));
         holder.menu_count.setText(items.get(position).getMenu_count());
-
-//        holder.menu_controlLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                switch(view.getId()){
-//                    case R.id.menu_add:
-//                        DevLog.d("되고 있는거 맞니?");
-//                        holder.menu_count.setText(String.valueOf(count + 1));
-//                        break;
-//
-//                    case R.id. menu_remove:
-//                        DevLog.d("되고 있는거 맞니?");
-//                        holder.menu_count.setText(String.valueOf(count - 1));
-//                        break;
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -76,6 +63,8 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         private ImageView menu_add;
         private ImageView menu_remove;
         private TextView menu_count;
+
+//        HashMap<String, OrderListItem> orderList;
 
         public MenuItemViewHolder(View view) {
             super(view);
@@ -94,20 +83,26 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.menu_add:
+                    addGlobalOrderList();
                     addBtnRoutine(view);
                     break;
                 case R.id.menu_remove:
+                    removeGlobalOrderList();
                     removeBtnRoutine(view);
                     break;
             }
         }
 
-        //        public LinearLayout getMenu_controlLayout() {
-//            return menu_controlLayout;
-//        }
-
         public String getMenu_name() {
             return menu_name.getText().toString();
+        }
+
+        public String getMenu_price() {
+            return menu_price.getText().toString();
+        }
+
+        public String getMenu_countS() {
+            return menu_count.getText().toString();
         }
 
         public ImageView getMenu_add() {
@@ -129,19 +124,83 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         }
 
         public void addBtnRoutine(View view) {
-            DevLog.d("menu_add btn Clicked!");
+            DevLog.d("ORDER LIST BUTTON","menu_add btn Clicked!");
             menu_count.setText(String.valueOf(intChanger(menu_count) + 1));
             String tmp_menu_name = getMenu_name();
             Toast.makeText(view.getContext(), tmp_menu_name, Toast.LENGTH_LONG).show();
         }
 
         public void removeBtnRoutine(View view) {
-            DevLog.d("menu_remove btn Clicked!");
+            DevLog.d("ORDER LIST BUTTON","menu_remove btn Clicked!");
             if(intChanger(menu_count) != 0){
                 menu_count.setText(String.valueOf(intChanger(menu_count) - 1));
             } else {
                 Toast.makeText(view.getContext(), "뺄 수량이 없습니다", Toast.LENGTH_LONG).show();
             }
+        }
+
+        /**
+         * 전역 orderlist에 추가
+         */
+        public void addGlobalOrderList() {
+//            orderList = ((MyApp)getApplication).getOrderList();
+            if ( orderlist.size() == 0 ) {
+                // 단순하게 orderlist 에 삽입
+                MenuListItem tmpMenuItem = new MenuListItem(getMenu_name(), getMenu_price(), getMenu_countS());
+                OrderListItem tmpOrderItem = makeMenuToOrderList(tmpMenuItem);
+                orderlist.put(getMenu_name(), tmpOrderItem);
+
+            } else {
+                // 주문 내역에 들어있는지 확인해 보아야 함
+                for(int i = 0; i < orderlist.size(); i++) {
+                    if (orderlist.containsKey(getMenu_name())) {
+                        // 해당 아이템을 1 증가시킴
+                        OrderListItem tmp = orderlist.get(getMenu_name());
+                        int tmpCount = Integer.parseInt(tmp.getOrder_count());
+                        orderlist.get(getMenu_name()).setOrder_count(String.valueOf(tmpCount + 1));
+                    } else {
+                        // 단순하게 orderlist 에 삽입
+                        MenuListItem tmpMenuItem = new MenuListItem(getMenu_name(), getMenu_price(), getMenu_countS());
+                        OrderListItem tmpOrderItem = makeMenuToOrderList(tmpMenuItem);
+                        orderlist.put(getMenu_name(), tmpOrderItem);
+                    }
+                }
+            }
+            DevLog.d("ORDER LIST ADD", orderlist.get(getMenu_name()).toString());
+        }
+
+        public void removeGlobalOrderList() {
+            if (orderlist.containsKey(getMenu_name())) {
+                if (easyStringToInt(orderlist.get(getMenu_name()).getOrder_count()) == 1) {
+                    orderlist.remove(getMenu_name());
+
+                } else if (easyStringToInt(orderlist.get(getMenu_name()).getOrder_count()) > 1) {
+                    OrderListItem tmp = orderlist.get(getMenu_name());
+                    int tmpCount = Integer.parseInt(tmp.getOrder_count());
+                    orderlist.get(getMenu_name()).setOrder_count(String.valueOf(tmpCount - 1));
+
+                }
+            }
+        }
+
+        /**
+         * MenuListItem 을 OrderListItem 으로 변경시켜주는 메서드
+         * @param menuListItem
+         * @return
+         */
+        public OrderListItem makeMenuToOrderList(MenuListItem menuListItem) {
+            OrderListItem orderListItem = new OrderListItem();
+
+            orderListItem.setOrder_name(menuListItem.getMenu_name());
+            orderListItem.setOrder_count(menuListItem.getMenu_count());
+            orderListItem.setOrder_each_price(menuListItem.getMenu_count());
+
+            return orderListItem;
+        }
+
+        public int easyStringToInt(String string) {
+
+            return Integer.parseInt(string);
         }
     }
 }

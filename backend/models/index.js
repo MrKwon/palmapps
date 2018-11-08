@@ -10,16 +10,21 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.member_info = require('./member')(sequelize, Sequelize);
-db.store_info = require('./store')(sequelize, Sequelize);
-db.orderlist = require('./orderlist')(sequelize, Sequelize);
+db.member_infos = require('./member')(sequelize, Sequelize);
+db.store_infos = require('./store')(sequelize, Sequelize);
+db.orderlists = require('./orderlist')(sequelize, Sequelize);
+db.menupans = require('./menu')(sequelize, Sequelize);
 
-// // orderlist 에는 orderer column에 member의 id 가 foreignKey로 등록됨
-// db.member_info.hasMany(db.orderlist, { foreignKey: 'orderer', sourceKey: 'id' });
-// db.orderlist.belongsTo(db.member_info, { foreignKey: 'orderer', targetKey: 'id' });
-//
-// // orderlist 에는 orderee column에 store의 id 가 foreignKey로 등록됨
-// db.store_info.hasMany(db.orderlist, { foreignKey: 'orderee', sourceKey: 'id' });
-// db.orderlist.belongsTo(db.store_info, { foreignKey: 'orderee', targetKey: 'id' });
+// orderlist 에는 orderer column에 member의 id 가 foreignKey로 등록됨
+db.member_infos.hasMany(db.orderlists, { foreignKey: 'orderer', sourceKey: 'id' });
+db.orderlists.belongsTo(db.member_infos, { foreignKey: 'orderer', targetKey: 'id' });
+
+// orderlist 에는 orderee column에 store의 id 가 foreignKey로 등록됨
+db.store_infos.hasMany(db.orderlists, { foreignKey: 'orderee', sourceKey: 'id' });
+db.orderlists.belongsTo(db.store_infos, { foreignKey: 'orderee', targetKey: 'id' });
+
+// store_info 하나가 menupan에 여러개의 store_name 들을 가지고 있음
+db.store_infos.hasMany(db.menupans, { foreignKey: 'store_name', sourceKey: 'id' });
+db.menupans.belongsTo(db.store_infos, { foreignKey: 'store_name', targetKey: 'id' });
 
 module.exports = db;

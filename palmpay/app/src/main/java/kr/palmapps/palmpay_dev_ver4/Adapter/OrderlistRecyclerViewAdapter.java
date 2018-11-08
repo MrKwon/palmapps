@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import kr.palmapps.palmpay_dev_ver4.Item.OrderListItem;
@@ -18,7 +19,10 @@ public class OrderlistRecyclerViewAdapter extends RecyclerView.Adapter<Orderlist
 
     ArrayList<OrderListItem> items;
 
-    public OrderlistRecyclerViewAdapter(ArrayList<OrderListItem> items) {
+//    HashMap<String, OrderListItem> items;
+
+    public OrderlistRecyclerViewAdapter(ArrayList<OrderListItem>/*HashMap<String, OrderListItem>*/ items) {
+
         this.items = items;
     }
 
@@ -33,13 +37,13 @@ public class OrderlistRecyclerViewAdapter extends RecyclerView.Adapter<Orderlist
     @Override
     public void onBindViewHolder(@NonNull OrderlistItemViewHolder holder, int position) {
         holder.order_name       .setText(items.get(position).getOrder_name());
-        holder.order_each_price .setText(items.get(position).getOrder_each_price() + " 원");
-        holder.order_count      .setText(items.get(position).getOrder_count() + " 개");
+        holder.order_each_price .setText(items.get(position).getOrder_each_price());
+        holder.order_count      .setText(items.get(position).getOrder_count());
 
         int eachPrice = Integer.parseInt(items.get(position).getOrder_each_price());
         int eachCount = Integer.parseInt(items.get(position).getOrder_count());
 
-        holder.order_total_price.setText(String.valueOf(eachPrice * eachCount) + " 원");
+        holder.order_total_price.setText(String.valueOf(eachPrice * eachCount));
 
     }
 

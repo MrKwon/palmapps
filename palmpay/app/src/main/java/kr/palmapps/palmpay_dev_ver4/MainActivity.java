@@ -1,8 +1,5 @@
 package kr.palmapps.palmpay_dev_ver4;
 
-import android.app.ActionBar;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -24,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import kr.palmapps.palmpay_dev_ver4.Adapter.MenuRecyclerViewAdapter;
 import kr.palmapps.palmpay_dev_ver4.Adapter.OrderlistRecyclerViewAdapter;
@@ -34,6 +32,7 @@ import kr.palmapps.palmpay_dev_ver4.Item.OrderListItem;
 import kr.palmapps.palmpay_dev_ver4.Item.PartnerListItem;
 import kr.palmapps.palmpay_dev_ver4.lib.DevLog;
 import kr.palmapps.palmpay_dev_ver4.lib.DevToast;
+import kr.palmapps.palmpay_dev_ver4.lib.MyApp;
 
 /**
  * 어플리케이션의 메인화면
@@ -44,7 +43,9 @@ public class MainActivity extends AppCompatActivity
     private final String TAG = this.getClass().getSimpleName();
 
     public Boolean isOpened = false;
-    public Boolean isBeaconDetected = true;
+    public Boolean isBeaconDetected = false;
+
+    public static HashMap<String, OrderListItem> orderlist = new HashMap<>();
 
     // 화면 요소들
     Toolbar toolbar;
@@ -61,7 +62,8 @@ public class MainActivity extends AppCompatActivity
 
     // Layout
     RelativeLayout now_orderlist;
-    RelativeLayout main_container;
+
+    RecyclerView content_main_recycler;
 
     // RecyclerView
     RecyclerView recyclerView_partner;
@@ -78,10 +80,18 @@ public class MainActivity extends AppCompatActivity
 
     ArrayList<OrderListItem> orderList = new ArrayList<>();
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        orderList = ((MyApp)getApplication()).getOrderList();
+
+        Intent intent = getIntent();
+        isBeaconDetected = Boolean.parseBoolean(intent.getStringExtra("isBeaconDetected"));
+        DevLog.d(TAG, intent.getStringExtra("isBeaconDetected"));
 
         setViewToolbar();
         setViewFloatingButton();
@@ -96,6 +106,8 @@ public class MainActivity extends AppCompatActivity
 
         initVisibilities();
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -181,7 +193,7 @@ public class MainActivity extends AppCompatActivity
      */
     public void setViewLayouts() {
         now_orderlist = (RelativeLayout) findViewById(R.id.now_orderlist);
-        main_container = (RelativeLayout) findViewById(R.id.main_container);
+        content_main_recycler = (RecyclerView) findViewById(R.id.content_main_recycler);
         bottomLayout = (LinearLayout) findViewById(R.id.bottomLayout);
     }
 
@@ -263,12 +275,15 @@ public class MainActivity extends AppCompatActivity
             // beacon detected
             setToolBarString("@상호명");
             setMenuListRecyclerView();
-            controlButtonsTransparent(isOrderExist(orderList));
+            controlButtonsTransparent(!orderlist.isEmpty()/*isOrderExist(orderList)*/);
+            setContentMainHeight(!orderlist.isEmpty()/*isOrderExist(orderList)*/);
+
         } else {
             // beacon undetected
             setToolBarString("PALM PAY HOME");
             setPartnerRecyclerView();
             controlButtonsTransparent(bool);
+            setContentMainHeight(bool);
         }
     }
 
@@ -331,7 +346,7 @@ public class MainActivity extends AppCompatActivity
      */
     public void dev_VersionArrayList() {
         PartnerListItem items;
-        for(int i = 0; i < 3; i++){
+        for(int i = 0; i < 9; i++){
             items = new PartnerListItem("상호명" + String.valueOf(i), "카페/식당", "데이터베이스 연결이 되어있지 않은 리스트입니다.");
             partnerList.add(items);
         }
@@ -357,6 +372,21 @@ public class MainActivity extends AppCompatActivity
         } else {
             fab.setVisibility(View.INVISIBLE);
             bottomLayout.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    /**
+     * param 값에 따라 RecyclerView 의 표시 영역을 바꿔주는 메서드
+     * @param bool false 일 경우 아래 버튼부가 없으므로 하단을 채우고, true 일 경우 버튼부를 표시해야하므로 하단부 bottomLayout 위로 올린다.
+     */
+    public void setContentMainHeight(Boolean bool) {
+        if (!bool) {
+            DevLog.d(TAG, "SET CONTENT MAIN HEIGHT MATCH PARENT");
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) content_main_recycler.getLayoutParams();
+            params.removeRule(RelativeLayout.ABOVE);
+        } else {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) content_main_recycler.getLayoutParams();
+            params.addRule(RelativeLayout.ABOVE, R.id.bottomLayout);
         }
     }
 
@@ -416,30 +446,4 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(MainActivity.this, PalmpayInfoActivity.class);
         startActivity(intent);
     }
-
-//    public void dev_isBeaconDetectedController() {
-//        // 비콘 인식 구현 이전에 루틴 컨트롤을 위해
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//
-//        builder.setTitle("isBeaconDetected")
-//                .setMessage("isBeaconDetected Controller")
-//                .setCancelable(false)
-//                .setPositiveButton("true", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        isBeaconDetected = true;
-//                        finish();
-//                    }
-//                })
-//                .setNegativeButton("false", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        isBeaconDetected = false;
-//                        finish();
-//                    }
-//                });
-//
-//        AlertDialog dialog = builder.create();
-//        dialog.show();
-//    }
 }

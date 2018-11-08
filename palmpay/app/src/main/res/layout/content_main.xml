@@ -9,20 +9,16 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <RelativeLayout
-        android:id="@+id/main_container"
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/content_main_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomLayout">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/content_main_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
 
-        </android.support.v7.widget.RecyclerView>
-
-    </RelativeLayout>
 
     <include layout="@layout/now_orderlist" />
 
