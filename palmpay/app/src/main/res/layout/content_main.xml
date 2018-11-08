@@ -29,8 +29,8 @@
         android:layout_above="@id/bottomLayout"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_shopping_cart_white_24dp"
-        android:visibility="visible"/>
+        app:srcCompat="@drawable/ic_shopping_cart_white_24dp"/>
+        <!--android:visibility="visible"-->
 
     <LinearLayout
         android:id="@+id/bottomLayout"

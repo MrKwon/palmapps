@@ -18,7 +18,7 @@ import kr.palmapps.palmpay_dev_ver4.lib.MyApp;
 import kr.palmapps.palmpay_dev_ver4.R;
 import kr.palmapps.palmpay_dev_ver4.lib.DevLog;
 
-import static kr.palmapps.palmpay_dev_ver4.MainActivity.orderlist;
+import static kr.palmapps.palmpay_dev_ver4.MainActivity.orderList;
 
 
 public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerViewAdapter.MenuItemViewHolder> {
@@ -143,64 +143,77 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
          * 전역 orderlist에 추가
          */
         public void addGlobalOrderList() {
-//            orderList = ((MyApp)getApplication).getOrderList();
-            if ( orderlist.size() == 0 ) {
+            if ( orderList.size() == 0 ) {
                 // 단순하게 orderlist 에 삽입
-                MenuListItem tmpMenuItem = new MenuListItem(getMenu_name(), getMenu_price(), getMenu_countS());
-                OrderListItem tmpOrderItem = makeMenuToOrderList(tmpMenuItem);
-                orderlist.put(getMenu_name(), tmpOrderItem);
+                DevLog.d("ORDER LIST NAME", getMenu_name());
+                DevLog.d("ORDER LIST PRICE", getMenu_price());
+                DevLog.d("ORDER LIST COUNTS", getMenu_countS());
+
+                OrderListItem tmpOrderItem = new OrderListItem(getMenu_name(), listAdder(), getMenu_price());
+                orderList.add(tmpOrderItem);
+
+                DevLog.d("ORDER LIST PROCESSING", tmpOrderItem.toString());
 
             } else {
                 // 주문 내역에 들어있는지 확인해 보아야 함
-                for(int i = 0; i < orderlist.size(); i++) {
-                    if (orderlist.containsKey(getMenu_name())) {
-                        // 해당 아이템을 1 증가시킴
-                        OrderListItem tmp = orderlist.get(getMenu_name());
-                        int tmpCount = Integer.parseInt(tmp.getOrder_count());
-                        orderlist.get(getMenu_name()).setOrder_count(String.valueOf(tmpCount + 1));
-                    } else {
-                        // 단순하게 orderlist 에 삽입
-                        MenuListItem tmpMenuItem = new MenuListItem(getMenu_name(), getMenu_price(), getMenu_countS());
-                        OrderListItem tmpOrderItem = makeMenuToOrderList(tmpMenuItem);
-                        orderlist.put(getMenu_name(), tmpOrderItem);
-                    }
+                int isHere = nameIndexFinder(getMenu_name());
+                if ( isHere != -1) {
+                    // 해당 아이템을 1 증가시킴
+                    int tmpCount = Integer.parseInt(orderList.get(isHere).getOrder_count());
+                    orderList.get(isHere).setOrder_count(String.valueOf(tmpCount + 1));
+                } else {
+                    // 단순하게 orderlist 에 삽입
+                    OrderListItem tmpOrderItem = new OrderListItem(getMenu_name(), listAdder(), getMenu_price());
+                    orderList.add(tmpOrderItem);
                 }
+
+
             }
-            DevLog.d("ORDER LIST ADD", orderlist.get(getMenu_name()).toString());
+            DevLog.d("ORDER LIST ADD", orderList.toString());
         }
 
         public void removeGlobalOrderList() {
-            if (orderlist.containsKey(getMenu_name())) {
-                if (easyStringToInt(orderlist.get(getMenu_name()).getOrder_count()) == 1) {
-                    orderlist.remove(getMenu_name());
+            int isHere = nameIndexFinder(getMenu_name());
 
-                } else if (easyStringToInt(orderlist.get(getMenu_name()).getOrder_count()) > 1) {
-                    OrderListItem tmp = orderlist.get(getMenu_name());
-                    int tmpCount = Integer.parseInt(tmp.getOrder_count());
-                    orderlist.get(getMenu_name()).setOrder_count(String.valueOf(tmpCount - 1));
+            // 없으면 바로 나감
+            if (isHere == -1) {
+                return;
+            }
 
+            // 있으면 수행
+            if (Integer.parseInt(orderList.get(isHere).getOrder_count()) == 1) {
+                if(orderList.size() != 1) {
+                    orderList.remove(isHere);
+                } else {
+                    orderList.clear();
                 }
+
+            } else if (Integer.parseInt(orderList.get(isHere).getOrder_count()) > 1) {
+                int tmpCount = Integer.parseInt(orderList.get(isHere).getOrder_count());
+                orderList.get(isHere).setOrder_count(String.valueOf(tmpCount - 1));
             }
         }
 
+
         /**
-         * MenuListItem 을 OrderListItem 으로 변경시켜주는 메서드
-         * @param menuListItem
-         * @return
+         * string 으로 전달시킨 인자를 전역 orderList 에서 찾고 인덱스를 반환해줌
+         * @param string orderList 에서 찾으려는 string
+         * @return string 의 index
+         *
+         * linear seaching algorithm 이긴 하지만 방대한 양을 searching 할 일은 없으니까 추후에 바꾸도록 하지
          */
-        public OrderListItem makeMenuToOrderList(MenuListItem menuListItem) {
-            OrderListItem orderListItem = new OrderListItem();
-
-            orderListItem.setOrder_name(menuListItem.getMenu_name());
-            orderListItem.setOrder_count(menuListItem.getMenu_count());
-            orderListItem.setOrder_each_price(menuListItem.getMenu_count());
-
-            return orderListItem;
+        public int nameIndexFinder(String string) {
+            int i = 0;
+            for( ; i < orderList.size(); i++ ) {
+                if ( orderList.get(i).getOrder_name() == getMenu_name() ) {
+                    return i;
+                }
+            }
+            return -1;
         }
 
-        public int easyStringToInt(String string) {
-
-            return Integer.parseInt(string);
+        public String listAdder() {
+            return "1";
         }
     }
 }

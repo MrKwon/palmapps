@@ -7,6 +7,16 @@ public class OrderListItem {
     String order_count;
     String order_total_price;
 
+    public OrderListItem() {
+
+    }
+
+    public OrderListItem(String order_name, String order_count, String order_each_price) {
+        this.order_name = order_name;
+        this.order_count = order_count;
+        this.order_each_price = order_each_price;
+    }
+
     public String getOrder_name() {
         return order_name;
     }

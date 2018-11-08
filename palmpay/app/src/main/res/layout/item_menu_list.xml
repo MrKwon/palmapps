@@ -45,6 +45,7 @@
             android:id="@+id/menu_controlLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_08"
             android:orientation="horizontal">
 
             <ImageView

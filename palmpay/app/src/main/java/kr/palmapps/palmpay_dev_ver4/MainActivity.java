@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity
     public Boolean isOpened = false;
     public Boolean isBeaconDetected = false;
 
-    public static HashMap<String, OrderListItem> orderlist = new HashMap<>();
-
     // 화면 요소들
     Toolbar toolbar;
     FloatingActionButton fab;
@@ -78,7 +76,7 @@ public class MainActivity extends AppCompatActivity
     ArrayList<PartnerListItem> partnerList = new ArrayList<>();
     ArrayList<MenuListItem> menuList = new ArrayList<>();
 
-    ArrayList<OrderListItem> orderList = new ArrayList<>();
+    public static ArrayList<OrderListItem> orderList = new ArrayList<>();
 
 
 
@@ -121,6 +119,7 @@ public class MainActivity extends AppCompatActivity
             DevToast.s(this, "noworderlist close");
             // noworderlist 목록 화면 클로스
             now_orderlist.setVisibility(View.INVISIBLE);
+
         } else {
             //super.onBackPressed();
             backPressButtonHandler.onBackPressed();
@@ -227,14 +226,12 @@ public class MainActivity extends AppCompatActivity
         if(isOpened) {
             isOpened = false;
             fab.setImageResource(R.drawable.ic_shopping_cart_white_24dp);
-            DevToast.s(this, "noworderlist close");
             // noworderlist 목록 화면 close
             now_orderlist.setVisibility(View.INVISIBLE);
 
         } else if (!isOpened) {
             isOpened = true;
             fab.setImageResource(R.drawable.ic_close_white_24dp);
-            DevToast.s(this, "noworderlist open");
             // noworderlist 목록 화면 오픈
             now_orderlist.setVisibility(View.VISIBLE);
             setOrderlistRecyclerView();
@@ -275,8 +272,8 @@ public class MainActivity extends AppCompatActivity
             // beacon detected
             setToolBarString("@상호명");
             setMenuListRecyclerView();
-            controlButtonsTransparent(!orderlist.isEmpty()/*isOrderExist(orderList)*/);
-            setContentMainHeight(!orderlist.isEmpty()/*isOrderExist(orderList)*/);
+            controlButtonsTransparent(isOrderExist(orderList));
+            setContentMainHeight(isOrderExist(orderList));
 
         } else {
             // beacon undetected
@@ -293,9 +290,9 @@ public class MainActivity extends AppCompatActivity
      */
     public void initVisibilities() {
         // Layout 설정에 상관없이 시작은 Invisible
-        now_orderlist.setVisibility(View.INVISIBLE);
-        bottomLayout.setVisibility(View.INVISIBLE);
-        fab.setVisibility(View.INVISIBLE);
+        now_orderlist.setVisibility(View./*IN*/VISIBLE);
+        bottomLayout.setVisibility(View./*IN*/VISIBLE);
+        fab.setVisibility(View./*IN*/VISIBLE);
     }
 
     /**
@@ -314,15 +311,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setOrderlistRecyclerView() {
-        if (orderList.size() != 0) {
-            recyclerView_order = findViewById(R.id.now_orderlist_recycler);
-            recyclerView_order.setHasFixedSize(true);
-            layoutManager_order = new LinearLayoutManager(this);
-            recyclerView_order.setLayoutManager(layoutManager_order);
+        recyclerView_order = findViewById(R.id.now_orderlist_recycler);
+        recyclerView_order.setHasFixedSize(true);
 
-            OrderlistRecyclerViewAdapter orderlistRecyclerViewAdapter = new OrderlistRecyclerViewAdapter(orderList);
-            recyclerView_order.setAdapter(orderlistRecyclerViewAdapter);
-        }
+        layoutManager_order = new LinearLayoutManager(this);
+        recyclerView_order.setLayoutManager(layoutManager_order);
+
+        OrderlistRecyclerViewAdapter orderlistRecyclerViewAdapter = new OrderlistRecyclerViewAdapter(orderList);
+        recyclerView_order.setAdapter(orderlistRecyclerViewAdapter);
+
     }
 
     public void setMenuListRecyclerView() {
@@ -331,13 +328,7 @@ public class MainActivity extends AppCompatActivity
         recyclerView_menu = findViewById(R.id.content_main_recycler);
         recyclerView_menu.setLayoutManager(new GridLayoutManager(this, 2));
 
-        MenuRecyclerViewAdapter menuRecyclerViewAdapter = new MenuRecyclerViewAdapter(menuList/*, new MenuRecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-
-                DevToast.s(getApplicationContext(), String.valueOf(position) + " add button clicked");
-            }
-        }*/);
+        MenuRecyclerViewAdapter menuRecyclerViewAdapter = new MenuRecyclerViewAdapter(menuList);
         recyclerView_menu.setAdapter(menuRecyclerViewAdapter);
     }
 
@@ -421,6 +412,9 @@ public class MainActivity extends AppCompatActivity
     public void setBackPressButtonHandler() {
         backPressButtonHandler = new BackPressButtonHandler(this);
     }
+
+
+
 
     public void goCoupon() {
         Intent intent = new Intent(MainActivity.this, CouponActivity.class);
