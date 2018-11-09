@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity
      */
     public void initVisibilities() {
         // Layout 설정에 상관없이 시작은 Invisible
-        now_orderlist.setVisibility(View./*IN*/VISIBLE);
+        now_orderlist.setVisibility(View.INVISIBLE);
         bottomLayout.setVisibility(View./*IN*/VISIBLE);
         fab.setVisibility(View./*IN*/VISIBLE);
     }
@@ -319,6 +319,8 @@ public class MainActivity extends AppCompatActivity
 
         OrderlistRecyclerViewAdapter orderlistRecyclerViewAdapter = new OrderlistRecyclerViewAdapter(orderList);
         recyclerView_order.setAdapter(orderlistRecyclerViewAdapter);
+
+        orderlistRecyclerViewAdapter.notifyDataSetChanged();
 
     }
 
@@ -374,7 +376,7 @@ public class MainActivity extends AppCompatActivity
         if (!bool) {
             DevLog.d(TAG, "SET CONTENT MAIN HEIGHT MATCH PARENT");
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) content_main_recycler.getLayoutParams();
-            params.removeRule(RelativeLayout.ABOVE);
+//            params.removeRule(RelativeLayout.ABOVE);
         } else {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) content_main_recycler.getLayoutParams();
             params.addRule(RelativeLayout.ABOVE, R.id.bottomLayout);

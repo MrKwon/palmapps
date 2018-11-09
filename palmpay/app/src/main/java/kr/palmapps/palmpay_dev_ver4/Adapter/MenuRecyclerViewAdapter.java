@@ -205,7 +205,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         public int nameIndexFinder(String string) {
             int i = 0;
             for( ; i < orderList.size(); i++ ) {
-                if ( orderList.get(i).getOrder_name() == getMenu_name() ) {
+                if ( orderList.get(i).getOrder_name() == string ) {
                     return i;
                 }
             }

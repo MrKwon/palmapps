@@ -1,5 +1,6 @@
 package kr.palmapps.palmpay_dev_ver4.Adapter;
 
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,10 @@ import java.util.List;
 
 import kr.palmapps.palmpay_dev_ver4.Item.OrderListItem;
 import kr.palmapps.palmpay_dev_ver4.R;
+import kr.palmapps.palmpay_dev_ver4.lib.DevLog;
+import kr.palmapps.palmpay_dev_ver4.lib.DevToast;
+
+import static kr.palmapps.palmpay_dev_ver4.MainActivity.orderList;
 
 public class OrderlistRecyclerViewAdapter extends RecyclerView.Adapter<OrderlistRecyclerViewAdapter.OrderlistItemViewHolder> {
 
@@ -43,6 +48,7 @@ public class OrderlistRecyclerViewAdapter extends RecyclerView.Adapter<Orderlist
 
         holder.order_total_price.setText(String.valueOf(eachPrice * eachCount));
 
+
     }
 
     @Override
@@ -59,6 +65,10 @@ public class OrderlistRecyclerViewAdapter extends RecyclerView.Adapter<Orderlist
         private TextView order_count;
         private TextView order_total_price;
 
+        public String getOrder_name() {
+            return order_name.getText().toString();
+        }
+
         public OrderlistItemViewHolder(View itemView){
             super(itemView);
             order_img = (ImageView) itemView.findViewById(R.id.order_img);
@@ -66,6 +76,7 @@ public class OrderlistRecyclerViewAdapter extends RecyclerView.Adapter<Orderlist
             order_each_price = (TextView) itemView.findViewById(R.id.order_each_price);
             order_count = (TextView) itemView.findViewById(R.id.order_count);
             order_total_price = (TextView) itemView.findViewById(R.id.order_total_price);
+
         }
     }
 }
