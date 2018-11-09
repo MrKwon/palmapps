@@ -69,12 +69,8 @@ public class IndexActivity extends AppCompatActivity {
     public void startMain() {
         Intent intent = new Intent(IndexActivity.this, MainActivity.class);
 
-        // 개발시에만 사용
-        dev_isBeaconDetectedController(intent);
-
-//        startActivity(intent);
-
-//        finish();
+        startActivity(intent);
+        finish();
     }
 
     /**
@@ -86,39 +82,5 @@ public class IndexActivity extends AppCompatActivity {
         startActivity(intent);
 
         finish();
-    }
-
-    public void dev_isBeaconDetectedController(final Intent intent) {
-        // 비콘 인식 구현 이전에 루틴 컨트롤을 위해
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle("DEV MODE")
-                .setMessage("isBeaconDetected Controller")
-                .setCancelable(false)
-                .setPositiveButton("true", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        isBeaconDetected = true;
-
-                        intent.putExtra("isBeaconDetected", String.valueOf(isBeaconDetected));
-
-                        startActivity(intent);
-                        finish();
-                    }
-                })
-                .setNegativeButton("false", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        isBeaconDetected = false;
-
-                        intent.putExtra("isBeaconDetected", String.valueOf(isBeaconDetected));
-
-                        startActivity(intent);
-                        finish();
-                    }
-                });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 }

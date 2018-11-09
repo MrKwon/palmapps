@@ -1,8 +1,10 @@
 package kr.palmapps.palmpay_dev_ver4;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -86,6 +88,8 @@ public class MainActivity extends AppCompatActivity
 //        Intent intent = getIntent();
 //        isBeaconDetected = Boolean.parseBoolean(intent.getStringExtra("isBeaconDetected"));
 //        DevLog.d(TAG, intent.getStringExtra("isBeaconDetected"));
+
+//        dev_isBeaconDetectedController();
 
         setViewToolbar();
         setViewFloatingButton();
@@ -412,6 +416,40 @@ public class MainActivity extends AppCompatActivity
      */
     public void setBackPressButtonHandler() {
         backPressButtonHandler = new BackPressButtonHandler(this);
+    }
+
+    public void dev_isBeaconDetectedController(/*final Intent intent*/) {
+        // 비콘 인식 구현 이전에 루틴 컨트롤을 위해
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("DEV MODE")
+                .setMessage("isBeaconDetected Controller")
+                .setCancelable(false)
+                .setPositiveButton("true", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        isBeaconDetected = true;
+
+//                        intent.putExtra("isBeaconDetected", String.valueOf(isBeaconDetected));
+//                        startActivity(intent);
+
+                        finish();
+                    }
+                })
+                .setNegativeButton("false", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        isBeaconDetected = false;
+
+//                        intent.putExtra("isBeaconDetected", String.valueOf(isBeaconDetected));
+//                        startActivity(intent);
+
+                        finish();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 
