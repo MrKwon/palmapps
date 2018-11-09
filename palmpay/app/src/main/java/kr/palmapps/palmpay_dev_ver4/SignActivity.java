@@ -1,6 +1,7 @@
 package kr.palmapps.palmpay_dev_ver4;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -156,6 +157,7 @@ public class SignActivity extends AppCompatActivity implements View.OnClickListe
                 DevLog.d(TAG, response.body().toString());
 
                 if (state.toString().equals("\"success\"")) {
+                    saveAutoSignIn(response.body());
                     startMain();
                 } else if (state.toString().equals("\"pwerror\"") ||
                         state.toString().equals("\"notexist\"")) {
@@ -172,6 +174,14 @@ public class SignActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+    }
+
+    public void saveAutoSignIn(JsonObject jsonObject) {
+        SharedPreferences preferences = getSharedPreferences("auth", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("autoSignIn", "true");
+        editor.putString("info", jsonObject.toString());
+        editor.apply();
     }
 
 

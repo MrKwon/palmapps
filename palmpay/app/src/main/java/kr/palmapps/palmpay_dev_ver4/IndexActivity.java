@@ -2,10 +2,13 @@ package kr.palmapps.palmpay_dev_ver4;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.google.gson.JsonObject;
 
 import kr.palmapps.palmpay_dev_ver4.lib.DevLog;
 
@@ -35,6 +38,8 @@ public class IndexActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
+        getAutoSignInState();
+
     }
 
     /**
@@ -60,6 +65,16 @@ public class IndexActivity extends AppCompatActivity {
                 }
             }
         }, 2500);
+    }
+
+    public void getAutoSignInState() {
+        SharedPreferences sharedPreferences = getSharedPreferences("auth", MODE_PRIVATE);
+        String autoSign = sharedPreferences.getString("autoSignIn", "false");
+        DevLog.d(TAG, autoSign);
+
+        String info = sharedPreferences.getString("info", "");
+        DevLog.d(TAG, info);
+
     }
 
     /**

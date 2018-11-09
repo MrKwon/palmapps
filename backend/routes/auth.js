@@ -88,10 +88,18 @@ router.post('/signin', async(req, res, next) => {
     const exUser = await member_infos.find({ where: { email } });
     if(exUser) {
       // const hash = await bcrypt.hash(password, 12);
+      const email = exUser.email;
+      const username = exUser.username;
+      const nickname = exUser.nickname;
       const result = await bcrypt.compare(password, exUser.password);
       if (result) {
         const json = JSON.stringify({
-          state: "success"
+          state: "success",
+          info: {
+            email,
+            username,
+            nickname
+          }
         });
         return res.end(json);
 
