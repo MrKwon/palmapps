@@ -3,14 +3,21 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+// const passport = require('passport');
 
+// Router 연결부
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
-const sequelize = require('./models').sequelize;
+const authRouter = require('./routes/auth');
+
+// Sequelize, passport 연결부
+const { sequelize } = require('./models');
+// const passportConfig = require('./passport');
 
 const app = express();
-sequelize.sync();
+sequelize.sync(); // Sequelize Sync
+// passportConfig(passport); // Passport
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -24,6 +31,7 @@ app.use(cookieParser());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/auth', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -26,7 +26,7 @@ public class IndexActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
 
     // 추가 필요
-    private final Boolean autoSignIn = true;
+    private final Boolean autoSignIn = false;
 
     public Boolean isBeaconDetected;
 

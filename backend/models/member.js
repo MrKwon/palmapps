@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     sex: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.ENUM,
+      values: ['남자', '여자'],
       allowNull: false,
     },
     runcount: {

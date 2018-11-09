@@ -6,14 +6,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import kr.palmapps.palmpay_dev_ver4.Item.MemberInfoItem;
+import kr.palmapps.palmpay_dev_ver4.Remote.RemoteService;
+import kr.palmapps.palmpay_dev_ver4.Remote.ServiceGenerator;
 import kr.palmapps.palmpay_dev_ver4.lib.DevLog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
@@ -32,17 +43,23 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     //Buttons
     ImageView agree_grant;
     Button do_sign_up;
+    Button canIuseThisId;
 
-    //EditTexts
+    //EditTexts, Spinner
     EditText signup_id;
     EditText signup_pw;
     EditText signup_pw2;
     EditText signup_name;
+    EditText signup_nickname;
     EditText signup_phone;
+
+    Spinner signup_sex;
 
     //ImageViews;
     ImageView signup_pw_length;
     ImageView signup_pw_check;
+
+    MemberInfoItem memberInfo;
 
     private static Boolean isGrantAgree = false;
     private static int isSatisfied = NOT_SATISFIED;
@@ -56,9 +73,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         setViewBts();
         setViewEditTexts();
         setViewImageViews();
+        setViewSpinner();
 
         setTextChangedListener(signup_pw);
         setTextChangedListener(signup_pw2);
+
+        initVisibility();
 
     }
 
@@ -73,20 +93,38 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.agree_grant :
                 changeAgreeGrantChanger();
                 break;
+
+            case R.id.canIuseThisID :
+                // 서버와 통신해서 중복 확인 - 도메인 /auth/isPossibleId
+                // response 의 message가 impossible 이면 중복
+                // response 의 message가 possible 이면
+                // 버튼을 TextView 로 바꾸고
+                // text를 확인으로 바꾸고, setBackgroud drawable. green으로 바꿈
+                isPossibleId();
+
+                break;
+
             case R.id.do_sign_up :
                 isGrantAgree = isCanDoSignUp();
                 if (isGrantAgree) {
                     // 서버와 통신해서 저장하고
+                    sendSignUpInfo();
 
-
-                    // MainActivity로 넘어감
-                    goSignActivity();
                 } else {
-                    Toast.makeText(getApplicationContext(), "정보를 모두 입력해주세요", Toast.LENGTH_SHORT).show();
+                    if (canIuseThisId.getText().toString().equals("사용가능")){
+                        Toast.makeText(getApplicationContext(), "정보를 모두 입력해주세요", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "아이디 중복 확인이 필요합니다", Toast.LENGTH_LONG).show();
+                    }
                 }
 
                 break;
         }
+    }
+
+    public void initVisibility() {
+        midLayout.setVisibility(View.INVISIBLE);
+        bottomLayout.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -105,6 +143,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         agree_grant.setOnClickListener(this);
         do_sign_up   = (Button) findViewById(R.id.do_sign_up);
         do_sign_up.setOnClickListener(this);
+        canIuseThisId = (Button) findViewById(R.id.canIuseThisID);
+        canIuseThisId.setOnClickListener(this);
     }
 
     /**
@@ -115,12 +155,25 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         signup_pw   = (EditText) findViewById(R.id.signup_pw);
         signup_pw2  = (EditText) findViewById(R.id.signup_pw2);
         signup_name = (EditText) findViewById(R.id.signup_name);
+        signup_nickname = (EditText) findViewById(R.id.signup_nickname);
         signup_phone= (EditText) findViewById(R.id.signup_phone);
     }
 
     public void setViewImageViews() {
         signup_pw_length = (ImageView) findViewById(R.id.signup_pw_length);
         signup_pw_check  = (ImageView) findViewById(R.id.signup_pw_check);
+    }
+
+    public void setViewSpinner() {
+        signup_sex = (Spinner) findViewById(R.id.signup_sex);
+//        final String[] sex = getResources().getStringArray(R.array.sex_array);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, sex, android.R.id. )
+//        signup_sex.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int pos, long l) {
+//                DevLog.d(TAG, String.valueOf(pos));
+//            }
+//        });
     }
 
     /**
@@ -151,7 +204,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         signup_pw.setText(null);
         signup_pw2.setText(null);
         signup_name.setText(null);
+        signup_nickname.setText(null);
         signup_phone.setText(null);
+
+        canIuseThisId.setBackgroundResource(R.drawable.bg_basic_red);
+        canIuseThisId.setText("중복확인");
+
     }
 
 
@@ -259,6 +317,77 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         return NOT_SATISFIED;
     }
 
+    public void isPossibleId() {
+        String checkId = signup_id.getText().toString();
+
+        DevLog.d(TAG, checkId);
+
+        if(checkId.equals("")) {
+            Toast.makeText(getApplicationContext(), "확인할 주소를 입력해주세요", Toast.LENGTH_LONG).show();
+
+        } else {
+            RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
+
+            Call<JsonObject> call = remoteService.isPossibleId(checkId);
+            call.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
+                    JsonElement state = response.body().get("state");
+
+                    if ( state.toString().equals("\"possible\"") ) {
+                        isPossible();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "다른 이메일로 가입해주세요", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "네트워크 상태를 확인해주세요", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+
+    /**
+     * response 를 받아 사용가능으로 canIuseThisId 버튼의 속성을 변경하는 메서드
+     */
+    public void isPossible() {
+        canIuseThisId.setBackgroundResource(R.drawable.bg_basic_greed_possible);
+        canIuseThisId.setText("사용가능");
+    }
+
+    public void sendSignUpInfo() {
+        memberInfo.
+                signup_id.getText().toString(),
+                signup_pw.getText().toString(),
+                signup_name.getText().toString(),
+                signup_nickname.getText().toString(),
+                signup_sex.getSelectedItem().toString(),
+                signup_phone.getText().toString()
+        );
+
+        RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
+
+        Call<JsonObject> call = remoteService.sendSignUpInfo(memberInfoItem);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonElement state = response.body().get("state");
+
+                if ( state.toString().equals("\"success\"") ) {
+                    goSignActivity();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+    }
+
     /**
      * 회원가입을 완료할 수 있는지 확인하는 메서드
      * @return 회원가입이 가능하다면 true를 불가능하다면 false를 반환
@@ -267,7 +396,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         if ( signup_id.getText().toString().length() != 0 &&
                 pwConditionChecker(signup_pw) == SATISFIED &&
                 twoPwSameChecker(signup_pw2) == SATISFIED &&
-                signup_name.getText().toString().length() != 0 ) {
+                signup_name.getText().toString().length() != 0 &&
+                signup_nickname.getText().toString().length() != 0 /*&&
+                canIuseThisId.getText().toString().equals("사용가능")*/) {
+
             return true;
         }
 

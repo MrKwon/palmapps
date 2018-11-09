@@ -21,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import kr.palmapps.palmpay_dev_ver4.Adapter.MenuRecyclerViewAdapter;
 import kr.palmapps.palmpay_dev_ver4.Adapter.OrderlistRecyclerViewAdapter;
@@ -32,7 +31,6 @@ import kr.palmapps.palmpay_dev_ver4.Item.OrderListItem;
 import kr.palmapps.palmpay_dev_ver4.Item.PartnerListItem;
 import kr.palmapps.palmpay_dev_ver4.lib.DevLog;
 import kr.palmapps.palmpay_dev_ver4.lib.DevToast;
-import kr.palmapps.palmpay_dev_ver4.lib.MyApp;
 
 /**
  * 어플리케이션의 메인화면
@@ -272,8 +270,8 @@ public class MainActivity extends AppCompatActivity
             // beacon detected
             setToolBarString("@상호명");
             setMenuListRecyclerView();
-            controlButtonsTransparent(isOrderExist(orderList));
-            setContentMainHeight(isOrderExist(orderList));
+            controlButtonsTransparent(true);
+            setContentMainHeight(true);
 
         } else {
             // beacon undetected
@@ -291,15 +289,15 @@ public class MainActivity extends AppCompatActivity
     public void initVisibilities() {
         // Layout 설정에 상관없이 시작은 Invisible
         now_orderlist.setVisibility(View.INVISIBLE);
-        bottomLayout.setVisibility(View./*IN*/VISIBLE);
-        fab.setVisibility(View./*IN*/VISIBLE);
+//        bottomLayout.setVisibility(View.INVISIBLE);
+//        fab.setVisibility(View.INVISIBLE);
     }
 
     /**
      * PartnerRecyclerView를 세팅하는 메서드
      */
     public void setPartnerRecyclerView() {
-        dev_VersionArrayList();
+        dev_VersionPartnerList();
 
         recyclerView_partner = findViewById(R.id.content_main_recycler);
         recyclerView_partner.setHasFixedSize(true);
@@ -337,7 +335,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * 서버와 연결하기 전 데이터를 임의로 생성하는 메서드
      */
-    public void dev_VersionArrayList() {
+    public void dev_VersionPartnerList() {
         PartnerListItem items;
         for(int i = 0; i < 9; i++){
             items = new PartnerListItem("상호명" + String.valueOf(i), "카페/식당", "데이터베이스 연결이 되어있지 않은 리스트입니다.");
@@ -376,7 +374,7 @@ public class MainActivity extends AppCompatActivity
         if (!bool) {
             DevLog.d(TAG, "SET CONTENT MAIN HEIGHT MATCH PARENT");
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) content_main_recycler.getLayoutParams();
-//            params.removeRule(RelativeLayout.ABOVE);
+            params.removeRule(RelativeLayout.ABOVE);
         } else {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) content_main_recycler.getLayoutParams();
             params.addRule(RelativeLayout.ABOVE, R.id.bottomLayout);
@@ -386,6 +384,9 @@ public class MainActivity extends AppCompatActivity
     /**
      * orderlist 존재 여부에 따라 boolean을 반환
      * 이 메소드는 하단 버튼부(bottomLayout)과 floatingbtn의 visibility를 결정하기 위해 만듦
+     *
+     * 베타버전에서는 구현하지 않을 부분, UX적인 요소가 강하다
+     *
      * @param list 확인할 orderlist
      * @return 존재하면 true를 반환하고 존재하지 않으면 false를 반환
      */
