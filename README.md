@@ -16,3 +16,8 @@ palmapps - PalmPay, PalmPos Frontend and Backend
 * Beacon Detecting과 서버와 연결을 제외하면 90% 완성
 * 현재 MenuRecyclerView와 OrderlistRecyclerView 만 연결하면 100퍼 완성
 * 이동시 버그있는지 Resource를 너무 많이 잡아먹진 않는지 계속 확인해야함
+
+#### 2018-11-10
+* Frontend 95% 완성
+* DB 90%
+* Backend - Frontend 연동 - 아이디 중복확인, 회원가입, 로그인 error처리까지 
