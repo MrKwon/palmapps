@@ -4,7 +4,6 @@ package kr.palmapps.palmpay_dev_ver4.Item;
  * 사용자 정보를 저장하는 객체
  */
 
-@org.parceler.Parcel
 public class MemberInfoItem {
     public int seq;
     public String email;
@@ -19,7 +18,7 @@ public class MemberInfoItem {
         return "MemberInfoItem{" +
                 "seq=" + seq +
                 ", email='" + email + '\'' +
-                ", password'" + password + '\'' +
+                ", password='" + password + '\'' +
                 ", username='" + username + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", phone='" + phone + '\'' +

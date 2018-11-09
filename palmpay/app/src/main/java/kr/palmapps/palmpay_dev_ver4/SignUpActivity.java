@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -49,7 +48,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     EditText signup_id;
     EditText signup_pw;
     EditText signup_pw2;
-    EditText signup_name;
+    EditText signup_username;
     EditText signup_nickname;
     EditText signup_phone;
 
@@ -58,8 +57,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     //ImageViews;
     ImageView signup_pw_length;
     ImageView signup_pw_check;
-
-    MemberInfoItem memberInfo;
 
     private static Boolean isGrantAgree = false;
     private static int isSatisfied = NOT_SATISFIED;
@@ -91,17 +88,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch(view.getId()) {
             case R.id.agree_grant :
-                changeAgreeGrantChanger();
+                changeAgreeGrantChanger(isGrantAgree);
                 break;
 
             case R.id.canIuseThisID :
-                // 서버와 통신해서 중복 확인 - 도메인 /auth/isPossibleId
-                // response 의 message가 impossible 이면 중복
-                // response 의 message가 possible 이면
-                // 버튼을 TextView 로 바꾸고
-                // text를 확인으로 바꾸고, setBackgroud drawable. green으로 바꿈
                 isPossibleId();
-
                 break;
 
             case R.id.do_sign_up :
@@ -154,7 +145,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         signup_id   = (EditText) findViewById(R.id.signup_id);
         signup_pw   = (EditText) findViewById(R.id.signup_pw);
         signup_pw2  = (EditText) findViewById(R.id.signup_pw2);
-        signup_name = (EditText) findViewById(R.id.signup_name);
+        signup_username = (EditText) findViewById(R.id.signup_username);
         signup_nickname = (EditText) findViewById(R.id.signup_nickname);
         signup_phone= (EditText) findViewById(R.id.signup_phone);
     }
@@ -166,33 +157,27 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     public void setViewSpinner() {
         signup_sex = (Spinner) findViewById(R.id.signup_sex);
-//        final String[] sex = getResources().getStringArray(R.array.sex_array);
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, sex, android.R.id. )
-//        signup_sex.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int pos, long l) {
-//                DevLog.d(TAG, String.valueOf(pos));
-//            }
-//        });
     }
 
     /**
      * AgreeGrant Changer
      */
-    public void changeAgreeGrantChanger() {
-        if (isGrantAgree) {
+    public void changeAgreeGrantChanger(Boolean bool) {
+        if (bool) {
             isGrantAgree = false;
             agree_grant.setImageResource(R.drawable.ic_check_circle_green_24dp);
             midLayout.setVisibility(View.VISIBLE);
             bottomLayout.setVisibility(View.VISIBLE);
             signup_id.clearFocus();
             editTextInitializer();
+            everyEditTextClearFocus();
 
-        } else if (!isGrantAgree) {
+        } else if (!bool) {
             isGrantAgree = true;
             agree_grant.setImageResource(R.drawable.ic_radio_button_unchecked_grey_24dp);
             midLayout.setVisibility(View.INVISIBLE);
             bottomLayout.setVisibility(View.INVISIBLE);
+            editTextFocusable(signup_id);
         }
     }
 
@@ -203,13 +188,21 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         signup_id.setText(null);
         signup_pw.setText(null);
         signup_pw2.setText(null);
-        signup_name.setText(null);
+        signup_username.setText(null);
         signup_nickname.setText(null);
         signup_phone.setText(null);
 
         canIuseThisId.setBackgroundResource(R.drawable.bg_basic_red);
         canIuseThisId.setText("중복확인");
+    }
 
+    public void everyEditTextClearFocus() {
+        signup_id.clearFocus();
+        signup_pw.clearFocus();
+        signup_pw2.clearFocus();
+        signup_username.clearFocus();
+        signup_nickname.clearFocus();
+        signup_phone.clearFocus();
     }
 
 
@@ -317,13 +310,20 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         return NOT_SATISFIED;
     }
 
+    public void editTextUnfocusable(EditText editText){
+        editText.setFocusable(false);
+    }
+
+    public void editTextFocusable(EditText editText){
+        editText.setFocusable(true);
+    }
+
     public void isPossibleId() {
         String checkId = signup_id.getText().toString();
-
         DevLog.d(TAG, checkId);
 
         if(checkId.equals("")) {
-            Toast.makeText(getApplicationContext(), "확인할 주소를 입력해주세요", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "아이디를 입력해주세요", Toast.LENGTH_LONG).show();
 
         } else {
             RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
@@ -335,16 +335,19 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                     JsonElement state = response.body().get("state");
 
+                    DevLog.d(TAG, response.body().toString());
+
                     if ( state.toString().equals("\"possible\"") ) {
                         isPossible();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "다른 이메일로 가입해주세요", Toast.LENGTH_LONG).show();
+                        editTextUnfocusable(signup_id);
+                    } else if ( state.toString().equals("\"impossible\"") ) {
+                        isImpossible();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), "네트워크 상태를 확인해주세요", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Server Error [error code : 408]", Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -358,23 +361,33 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         canIuseThisId.setText("사용가능");
     }
 
+    public void isImpossible() {
+        Toast.makeText(getApplicationContext(), "이미 사용중인 아이디입니다", Toast.LENGTH_LONG).show();
+    }
+
     public void sendSignUpInfo() {
-        memberInfo.
-                signup_id.getText().toString(),
-                signup_pw.getText().toString(),
-                signup_name.getText().toString(),
-                signup_nickname.getText().toString(),
-                signup_sex.getSelectedItem().toString(),
-                signup_phone.getText().toString()
-        );
+
+        MemberInfoItem memberInfo = new MemberInfoItem();
+
+        memberInfo.email    = signup_id.getText().toString();
+        memberInfo.password = signup_pw.getText().toString();
+        memberInfo.username = signup_username.getText().toString();
+        memberInfo.nickname = signup_nickname.getText().toString();
+        memberInfo.sex      = signup_sex.getSelectedItem().toString();
+        memberInfo.phone    = signup_phone.getText().toString();
+
+        DevLog.d(TAG, memberInfo.toString());
 
         RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
 
-        Call<JsonObject> call = remoteService.sendSignUpInfo(memberInfoItem);
+        Call<JsonObject> call = remoteService.sendSignUpInfo(memberInfo);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
                 JsonElement state = response.body().get("state");
+
+                DevLog.d(TAG, response.body().toString());
 
                 if ( state.toString().equals("\"success\"") ) {
                     goSignActivity();
@@ -383,7 +396,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                DevLog.d(TAG, "FAILURE");
             }
         });
     }
@@ -396,9 +409,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         if ( signup_id.getText().toString().length() != 0 &&
                 pwConditionChecker(signup_pw) == SATISFIED &&
                 twoPwSameChecker(signup_pw2) == SATISFIED &&
-                signup_name.getText().toString().length() != 0 &&
-                signup_nickname.getText().toString().length() != 0 /*&&
-                canIuseThisId.getText().toString().equals("사용가능")*/) {
+                signup_username.getText().toString().length() != 0 &&
+                signup_nickname.getText().toString().length() != 0 ) {
 
             return true;
         }
@@ -407,7 +419,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void goSignActivity() {
-        Toast.makeText(getApplicationContext(), signup_name.getText().toString() + "님 회원가입에 성공하셨습니다.", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), signup_username.getText().toString() + "님 회원가입에 성공하셨습니다.", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(SignUpActivity.this, SignActivity.class);
         startActivity(intent);
         finish();

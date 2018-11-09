@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity
     private final String TAG = this.getClass().getSimpleName();
 
     public Boolean isOpened = false;
-    public Boolean isBeaconDetected = false;
+    public Boolean isBeaconDetected = true;
 
     // 화면 요소들
     Toolbar toolbar;
@@ -83,11 +83,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        orderList = ((MyApp)getApplication()).getOrderList();
-
-        Intent intent = getIntent();
-        isBeaconDetected = Boolean.parseBoolean(intent.getStringExtra("isBeaconDetected"));
-        DevLog.d(TAG, intent.getStringExtra("isBeaconDetected"));
+//        Intent intent = getIntent();
+//        isBeaconDetected = Boolean.parseBoolean(intent.getStringExtra("isBeaconDetected"));
+//        DevLog.d(TAG, intent.getStringExtra("isBeaconDetected"));
 
         setViewToolbar();
         setViewFloatingButton();
@@ -385,7 +383,7 @@ public class MainActivity extends AppCompatActivity
      * orderlist 존재 여부에 따라 boolean을 반환
      * 이 메소드는 하단 버튼부(bottomLayout)과 floatingbtn의 visibility를 결정하기 위해 만듦
      *
-     * 베타버전에서는 구현하지 않을 부분, UX적인 요소가 강하다
+     * 베타버전에서는 구현하지 않을 부분, UX적인 요소가 강함
      *
      * @param list 확인할 orderlist
      * @return 존재하면 true를 반환하고 존재하지 않으면 false를 반환

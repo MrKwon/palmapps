@@ -12,8 +12,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import kr.palmapps.palmpay_dev_ver4.Item.MemberInfoItem;
+import kr.palmapps.palmpay_dev_ver4.Remote.RemoteService;
+import kr.palmapps.palmpay_dev_ver4.Remote.ServiceGenerator;
 import kr.palmapps.palmpay_dev_ver4.lib.DevToast;
 import kr.palmapps.palmpay_dev_ver4.lib.DevLog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * SignIn에 사용할 아이디 선택하는 액티비티
@@ -51,10 +60,9 @@ public class SignActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.palm_sign_in :
-                DevToast.s(getApplicationContext(), "Palm Sign In");
+                DevLog.d(TAG, "BUTTON CLICKED PALM SIGN IN");
                 if(emptyChecker(getInputId(), getInputPw())) {
-                    DevToast.s(getApplicationContext(), "로그인 성공");
-                    startMain();
+                    goSignIn();
                 }
                 break;
             case R.id.palm_id_signup :
@@ -62,13 +70,13 @@ public class SignActivity extends AppCompatActivity implements View.OnClickListe
                 goSignup();
                 break;
             case R.id.naver_id :
-                DevToast.s(getApplicationContext(), "Naver 아이디로 로그인");
+                DevToast.s(getApplicationContext(), "서비스 준비중입니다");
                 break;
             case R.id.kakao_id :
-                DevToast.s(getApplicationContext(), "Kakao 계정으로 로그인");
+                DevToast.s(getApplicationContext(), "서비스 준비중입니다");
                 break;
             case R.id.facebook_id :
-                DevToast.s(getApplicationContext(), "FB 아이디로 로그인");
+                DevToast.s(getApplicationContext(), "서비스 준비중입니다");
                 break;
         }
     }
@@ -127,6 +135,46 @@ public class SignActivity extends AppCompatActivity implements View.OnClickListe
         }
         return true;
     }
+
+    public void goSignIn() {
+
+        MemberInfoItem memberInfo = new MemberInfoItem();
+
+        memberInfo.email = user_id.getText().toString();
+        memberInfo.password = user_pw.getText().toString();
+
+        DevLog.d(TAG, memberInfo.toString());
+
+        RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
+
+        Call<JsonObject> call = remoteService.goSignIn(memberInfo);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
+                JsonElement state = response.body().get("state");
+                DevLog.d(TAG, response.body().toString());
+
+                if (state.toString().equals("\"success\"")) {
+                    startMain();
+                } else if (state.toString().equals("\"pwerror\"") ||
+                        state.toString().equals("\"notexist\"")) {
+                    Toast.makeText(getApplicationContext(), "아이디와 비밀번호를 확인해주세요", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "[error code : 520]", Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Server Error [error code : 408]", Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+
 
     public void startMain(){
         Intent intent = new Intent(SignActivity.this, MainActivity.class);
