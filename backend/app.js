@@ -10,6 +10,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const authRouter = require('./routes/auth');
+const partnersRouter = require('./routes/partners');
 
 // Sequelize, passport 연결부
 const { sequelize } = require('./models');
@@ -32,6 +33,7 @@ app.use(cookieParser());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
+app.use('/partners', partnersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
