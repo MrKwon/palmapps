@@ -156,11 +156,11 @@ public class SignActivity extends AppCompatActivity implements View.OnClickListe
                 JsonElement state = response.body().get("state");
                 DevLog.d(TAG, response.body().toString());
 
-                if (state.toString().equals("\"success\"")) {
+                if (state.getAsString().equals("success")) {
                     saveAutoSignIn(response.body());
                     startMain();
-                } else if (state.toString().equals("\"pwerror\"") ||
-                        state.toString().equals("\"notexist\"")) {
+                } else if (state.getAsString().equals("pwerror") ||
+                        state.getAsString().equals("notexist")) {
                     Toast.makeText(getApplicationContext(), "아이디와 비밀번호를 확인해주세요", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "[error code : 520]", Toast.LENGTH_LONG).show();
@@ -183,9 +183,9 @@ public class SignActivity extends AppCompatActivity implements View.OnClickListe
         DevLog.d("Auto Sign In", jsonObject.toString());
 
         editor.putString("autoSignIn", "true");
-        editor.putString("email", jsonObject.get("email").toString().replace("\"",""));
-        editor.putString("username", jsonObject.get("username").toString().replace("\"",""));
-        editor.putString("nickname", jsonObject.get("nickname").toString().replace("\"",""));
+        editor.putString("email", jsonObject.get("email").getAsString());
+        editor.putString("username", jsonObject.get("username").getAsString());
+        editor.putString("nickname", jsonObject.get("nickname").getAsString());
 
         editor.apply();
     }

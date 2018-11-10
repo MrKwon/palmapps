@@ -43,7 +43,7 @@ public class OrderlistRecyclerViewAdapter extends RecyclerView.Adapter<Orderlist
         holder.order_each_price .setText(items.get(position).getOrder_each_price());
         holder.order_count      .setText(items.get(position).getOrder_count());
 
-        int eachPrice = Integer.parseInt("1000"/*items.get(position).getOrder_each_price()*/);
+        int eachPrice = Integer.parseInt(items.get(position).getOrder_each_price());
         int eachCount = Integer.parseInt(items.get(position).getOrder_count());
 
         holder.order_total_price.setText(String.valueOf(eachPrice * eachCount));

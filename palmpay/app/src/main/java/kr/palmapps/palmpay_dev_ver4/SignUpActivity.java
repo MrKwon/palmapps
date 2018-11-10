@@ -337,10 +337,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                     DevLog.d(TAG, response.body().toString());
 
-                    if ( state.toString().equals("\"possible\"") ) {
+                    if ( state.getAsString().equals("possible") ) {
                         isPossible();
                         editTextUnfocusable(signup_id);
-                    } else if ( state.toString().equals("\"impossible\"") ) {
+                    } else if ( state.getAsString().equals("impossible") ) {
                         isImpossible();
                     }
                 }
@@ -390,7 +390,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                 DevLog.d(TAG, response.body().toString());
 
-                if ( state.toString().equals("\"success\"") ) {
+                if ( state.getAsString().equals("success") ) {
                     goSignActivity();
                 }
             }

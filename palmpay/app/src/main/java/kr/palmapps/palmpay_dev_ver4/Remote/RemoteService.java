@@ -7,15 +7,12 @@ import com.google.gson.JsonObject;
 import kr.palmapps.palmpay_dev_ver4.Item.MemberInfoItem;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 /**
- * 서버에 호출할 메소드를 선언하는 인터페이스
+ * 서버에 호출할 메서드를 선언하는 인터페이스
  */
 public interface RemoteService {
     String BASE_URL = "http://192.168.0.13:3000"/*"http://10.0.2.2:3000"*/;
@@ -30,9 +27,16 @@ public interface RemoteService {
     @POST("/auth/signin")
     Call<JsonObject> goSignIn(@Body MemberInfoItem memberInfoItem);
 
+
+    //MainActivity에서의 메서드들
     @GET("/partners")
-    Call<JsonArray> getAllPartners();
+    Call<JsonArray> getAllPartnersList();
 
+    // id는 비콘을 통해 얻어오는 값
+    @GET("/menu/{id}/menupans")
+    Call<JsonArray> getAllMenusList(@Path("id") String id);
 
+    @GET("/menu/{id}")
+    Call<JsonObject> getStoreName(@Path("id") String id);
 
 }

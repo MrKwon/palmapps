@@ -6,6 +6,12 @@ public class MenuListItem  {
     String menu_price;
     String menu_count;
 
+    public MenuListItem(String menu_name, String menu_price) {
+        this.menu_name = menu_name;
+        this.menu_price = menu_price;
+        this.menu_count = "0";
+    }
+
     public MenuListItem(String menu_name, String menu_price, String menu_count) {
         this.menu_name = menu_name;
         this.menu_price = menu_price;
