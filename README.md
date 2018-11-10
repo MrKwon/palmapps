@@ -1,15 +1,6 @@
 # palmapps
 palmapps - PalmPay, PalmPos Frontend and Backend
 
-### 남은 할 일
-1. 메인화면
-  - 비콘 미인식시 : 제휴 카페, 식당 리스트 뷰 (RecyclerView)
-  - 비콘 인식시 : 해당 카페, 식당 메뉴판 (RecyclerView)
-
-2. 서버
-  - MySQL
-  - node.js REST API
-
 ### Dev Log
 #### 2018-11-07
 * 프론트엔드부분은 거의 완성단계
@@ -21,3 +12,12 @@ palmapps - PalmPay, PalmPos Frontend and Backend
 * Frontend 95% 완성
 * DB 90%
 * Backend - Frontend 연동 - 아이디 중복확인, 회원가입, 로그인 error처리까지 
+
+#### 2018-11-11
+* Backend - Frontend 연동 - 제휴점 리스트, 메뉴판까지 구현
+<br>
+진짜 얼마 안남았다<br>
+1. 비콘 연동, 비콘 정보 조회 db
+2. 진동벨 기능
+3. 주문 내역 전송 기능
+4. palmpos
