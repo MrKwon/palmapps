@@ -95,11 +95,9 @@ router.post('/signin', async(req, res, next) => {
       if (result) {
         const json = JSON.stringify({
           state: "success",
-          info: {
-            email,
-            username,
-            nickname
-          }
+          email,
+          username,
+          nickname,
         });
         return res.end(json);
 

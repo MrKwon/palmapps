@@ -2,7 +2,9 @@ package kr.palmapps.palmpay_dev_ver4;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,6 +22,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -54,6 +57,10 @@ public class MainActivity extends AppCompatActivity
     // 버튼들
     Button palm_fast_order;
     Button normal_order;
+
+    // nav_header_main textview들
+    TextView signin_email;
+    TextView signin_names;
 
     // 뒤로가기 한번에 종료되는거 방지
     BackPressButtonHandler backPressButtonHandler;
@@ -98,6 +105,7 @@ public class MainActivity extends AppCompatActivity
         setViewLayouts();
         setBackPressButtonHandler();
         setContent(isBeaconDetected);
+//        setNavHeaders();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -141,8 +149,14 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_signout) {
+            SharedPreferences sharedPreferences = getSharedPreferences("auth", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+
+            editor.commit();
+
+            goSignActivity();
         }
 
         return super.onOptionsItemSelected(item);
@@ -452,8 +466,18 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
     }
 
-
-
+//    public void setNavHeaders() {
+//        SharedPreferences sharedPreferences = getSharedPreferences("auth", MODE_PRIVATE);
+//
+//        String email = sharedPreferences.getString("email", null);
+//        String username = sharedPreferences.getString("username", null);
+//        String nickname = sharedPreferences.getString("nickname", null);
+//
+//        signin_email = (TextView) findViewById(R.layout.nav_header_main);
+//        signin_email.setText(email);
+//        signin_names = (TextView) findViewById(R.id.signin_names);
+//        signin_names.setText(username + " / " + nickname);
+//    }
 
     public void goCoupon() {
         Intent intent = new Intent(MainActivity.this, CouponActivity.class);
@@ -478,5 +502,14 @@ public class MainActivity extends AppCompatActivity
     public void goPalmpayInfo() {
         Intent intent = new Intent(MainActivity.this, PalmpayInfoActivity.class);
         startActivity(intent);
+    }
+
+    public void goSignActivity() {
+        Intent intent = new Intent(MainActivity.this, SignActivity.class);
+        startActivity(intent);
+
+        Toast.makeText(getApplicationContext(), "로그아웃 되었습니다", Toast.LENGTH_LONG).show();
+
+        finish();
     }
 }

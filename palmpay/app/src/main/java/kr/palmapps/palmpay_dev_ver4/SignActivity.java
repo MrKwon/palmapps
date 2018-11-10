@@ -179,12 +179,16 @@ public class SignActivity extends AppCompatActivity implements View.OnClickListe
     public void saveAutoSignIn(JsonObject jsonObject) {
         SharedPreferences preferences = getSharedPreferences("auth", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
+
+        DevLog.d("Auto Sign In", jsonObject.toString());
+
         editor.putString("autoSignIn", "true");
-        editor.putString("info", jsonObject.toString());
+        editor.putString("email", jsonObject.get("email").toString().replace("\"",""));
+        editor.putString("username", jsonObject.get("username").toString().replace("\"",""));
+        editor.putString("nickname", jsonObject.get("nickname").toString().replace("\"",""));
+
         editor.apply();
     }
-
-
 
     public void startMain(){
         Intent intent = new Intent(SignActivity.this, MainActivity.class);

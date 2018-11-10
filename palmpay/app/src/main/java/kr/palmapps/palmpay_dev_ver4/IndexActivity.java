@@ -29,7 +29,7 @@ public class IndexActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
 
     // 추가 필요
-    private final Boolean autoSignIn = false;
+    private Boolean autoSignIn = false;
 
     public Boolean isBeaconDetected;
 
@@ -38,8 +38,6 @@ public class IndexActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
-        getAutoSignInState();
-
     }
 
     /**
@@ -52,11 +50,14 @@ public class IndexActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        getAutoSignInState();
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 DevLog.d("AutoSignIn.State : ", autoSignIn.toString());
+
                 if (!autoSignIn) {
                     startSign();
 
@@ -70,10 +71,20 @@ public class IndexActivity extends AppCompatActivity {
     public void getAutoSignInState() {
         SharedPreferences sharedPreferences = getSharedPreferences("auth", MODE_PRIVATE);
         String autoSign = sharedPreferences.getString("autoSignIn", "false");
-        DevLog.d(TAG, autoSign);
 
-        String info = sharedPreferences.getString("info", "");
-        DevLog.d(TAG, info);
+        if ( autoSign.equals("true") ) {
+            autoSignIn = true;
+        } else {
+            autoSignIn = false;
+        }
+
+        DevLog.d(TAG + "sharedPreferences", autoSign);
+
+        String email = sharedPreferences.getString("email", null);
+        String username = sharedPreferences.getString("username", null);
+        String nickname = sharedPreferences.getString("nickname", null);
+
+        DevLog.d(TAG + "sharedPreferences", email + username + nickname);
 
     }
 
