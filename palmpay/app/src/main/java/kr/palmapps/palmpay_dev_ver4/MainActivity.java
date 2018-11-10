@@ -25,6 +25,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import kr.palmapps.palmpay_dev_ver4.Adapter.MenuRecyclerViewAdapter;
@@ -46,13 +48,15 @@ public class MainActivity extends AppCompatActivity
     private final String TAG = this.getClass().getSimpleName();
 
     public Boolean isOpened = false;
-    public Boolean isBeaconDetected = true;
+    public Boolean isBeaconDetected = false;
 
     // 화면 요소들
     Toolbar toolbar;
     FloatingActionButton fab;
     DrawerLayout drawer;
     LinearLayout bottomLayout;
+    NavigationView navigationView;
+    View headerLayout;
 
     // 버튼들
     Button palm_fast_order;
@@ -60,7 +64,8 @@ public class MainActivity extends AppCompatActivity
 
     // nav_header_main textview들
     TextView signin_email;
-    TextView signin_names;
+    TextView signin_username;
+    TextView signin_nickname;
 
     // 뒤로가기 한번에 종료되는거 방지
     BackPressButtonHandler backPressButtonHandler;
@@ -84,20 +89,16 @@ public class MainActivity extends AppCompatActivity
     ArrayList<MenuListItem> menuList = new ArrayList<>();
 
     public static ArrayList<OrderListItem> orderList = new ArrayList<>();
-
-
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 //        Intent intent = getIntent();
 //        isBeaconDetected = Boolean.parseBoolean(intent.getStringExtra("isBeaconDetected"));
 //        DevLog.d(TAG, intent.getStringExtra("isBeaconDetected"));
 
 //        dev_isBeaconDetectedController();
-
         setViewToolbar();
         setViewFloatingButton();
         setViewDrawer();
@@ -105,10 +106,8 @@ public class MainActivity extends AppCompatActivity
         setViewLayouts();
         setBackPressButtonHandler();
         setContent(isBeaconDetected);
-//        setNavHeaders();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        setNavigationView();
+        setNavHeaders();
 
         initVisibilities();
     }
@@ -273,6 +272,12 @@ public class MainActivity extends AppCompatActivity
         normal_order.setOnClickListener(this);
     }
 
+    public void setNavigationView() {
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        headerLayout = navigationView.getHeaderView(0);
+    }
 
     /**
      * content 안에 표시할 내용을 정의하는 메서드
@@ -313,10 +318,11 @@ public class MainActivity extends AppCompatActivity
      * PartnerRecyclerView를 세팅하는 메서드
      */
     public void setPartnerRecyclerView() {
-        dev_VersionPartnerList();
+//        dev_VersionPartnerList();
 
         recyclerView_partner = findViewById(R.id.content_main_recycler);
         recyclerView_partner.setHasFixedSize(true);
+
         layoutManager_partner = new LinearLayoutManager(this);
         recyclerView_partner.setLayoutManager(layoutManager_partner);
 
@@ -348,16 +354,16 @@ public class MainActivity extends AppCompatActivity
         recyclerView_menu.setAdapter(menuRecyclerViewAdapter);
     }
 
-    /**
-     * 서버와 연결하기 전 데이터를 임의로 생성하는 메서드
-     */
-    public void dev_VersionPartnerList() {
-        PartnerListItem items;
-        for(int i = 0; i < 9; i++){
-            items = new PartnerListItem("상호명" + String.valueOf(i), "카페/식당", "데이터베이스 연결이 되어있지 않은 리스트입니다.");
-            partnerList.add(items);
-        }
-    }
+//    /**
+//     * 서버와 연결하기 전 데이터를 임의로 생성하는 메서드
+//     */
+//    public void dev_VersionPartnerList() {
+//        PartnerListItem items;
+//        for(int i = 0; i < 9; i++){
+//            items = new PartnerListItem("상호명" + String.valueOf(i), "카페/식당", "데이터베이스 연결이 되어있지 않은 리스트입니다.");
+//            partnerList.add(items);
+//        }
+//    }
 
     public void dev_VersionMenuList() {
         MenuListItem items;
@@ -397,22 +403,22 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * orderlist 존재 여부에 따라 boolean을 반환
-     * 이 메소드는 하단 버튼부(bottomLayout)과 floatingbtn의 visibility를 결정하기 위해 만듦
-     *
-     * 베타버전에서는 구현하지 않을 부분, UX적인 요소가 강함
-     *
-     * @param list 확인할 orderlist
-     * @return 존재하면 true를 반환하고 존재하지 않으면 false를 반환
-     */
-    public Boolean isOrderExist(ArrayList<OrderListItem> list) {
-        if (list.size() != 0) {
-            return true;
-        }
-
-        return false;
-    }
+//    /**
+//     * orderlist 존재 여부에 따라 boolean을 반환
+//     * 이 메소드는 하단 버튼부(bottomLayout)과 floatingbtn의 visibility를 결정하기 위해 만듦
+//     *
+//     * 베타버전에서는 구현하지 않을 부분, UX적인 요소가 강함
+//     *
+//     * @param list 확인할 orderlist
+//     * @return 존재하면 true를 반환하고 존재하지 않으면 false를 반환
+//     */
+//    public Boolean isOrderExist(ArrayList<OrderListItem> list) {
+//        if (list.size() != 0) {
+//            return true;
+//        }
+//
+//        return false;
+//    }
 
     /**
      * ActionBar 세팅 메서드
@@ -423,7 +429,6 @@ public class MainActivity extends AppCompatActivity
     public void setToolBarString(String string) {
         getSupportActionBar().setTitle(string);
     }
-
 
     /**
      * 뒤로가기 버튼 세팅 메서드
@@ -466,18 +471,20 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
     }
 
-//    public void setNavHeaders() {
-//        SharedPreferences sharedPreferences = getSharedPreferences("auth", MODE_PRIVATE);
-//
-//        String email = sharedPreferences.getString("email", null);
-//        String username = sharedPreferences.getString("username", null);
-//        String nickname = sharedPreferences.getString("nickname", null);
-//
-//        signin_email = (TextView) findViewById(R.layout.nav_header_main);
-//        signin_email.setText(email);
-//        signin_names = (TextView) findViewById(R.id.signin_names);
-//        signin_names.setText(username + " / " + nickname);
-//    }
+    public void setNavHeaders() {
+        SharedPreferences sharedPreferences = getSharedPreferences("auth", MODE_PRIVATE);
+
+        String email = sharedPreferences.getString("email", null);
+        String username = sharedPreferences.getString("username", null);
+        String nickname = sharedPreferences.getString("nickname", null);
+
+        signin_email = (TextView) headerLayout.findViewById(R.id.signin_email);
+        signin_email.setText(email);
+        signin_username = (TextView) headerLayout.findViewById(R.id.signin_username);
+        signin_username.setText(username);
+        signin_nickname = (TextView) headerLayout.findViewById(R.id.signin_nickname);
+        signin_nickname.setText(nickname);
+    }
 
     public void goCoupon() {
         Intent intent = new Intent(MainActivity.this, CouponActivity.class);

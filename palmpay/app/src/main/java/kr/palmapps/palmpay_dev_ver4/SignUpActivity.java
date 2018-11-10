@@ -382,6 +382,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         Call<JsonObject> call = remoteService.sendSignUpInfo(memberInfo);
         call.enqueue(new Callback<JsonObject>() {
+
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
@@ -410,7 +411,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 pwConditionChecker(signup_pw) == SATISFIED &&
                 twoPwSameChecker(signup_pw2) == SATISFIED &&
                 signup_username.getText().toString().length() != 0 &&
-                signup_nickname.getText().toString().length() != 0 ) {
+                signup_nickname.getText().toString().length() != 0 &&
+                signup_phone.getText().toString().length() != 0 ) {
 
             return true;
         }

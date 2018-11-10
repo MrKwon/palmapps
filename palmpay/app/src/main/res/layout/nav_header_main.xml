@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
     android:background="@drawable/side_nav_bar"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
+    android:gravity="bottom"
+    android:orientation="horizontal"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/margin_08"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -16,23 +16,45 @@
         android:id="@+id/imageView"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:layout_marginRight="@dimen/margin_04"
         android:contentDescription="@string/nav_header_desc"
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/ic_account_circle_grey_50dp" />
 
-    <TextView
-        android:id="@+id/signin_email"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_04"
-        android:text="palmpay@palmpay.com"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/signin_names"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_04"
-        android:text="이름 / 닉네임" />
+        <TextView
+            android:id="@+id/signin_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="palmpay@palmpay.com"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <TextView
+            android:id="@+id/signin_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_04"
+            android:text="이름" />
+
+        <TextView
+            android:id="@+id/signin_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_04"
+            android:text="닉네임" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_04"
+            android:text="CREDIT"/>
+
+    </LinearLayout>
+
+
 
 </LinearLayout>

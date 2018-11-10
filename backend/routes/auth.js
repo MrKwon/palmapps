@@ -10,20 +10,26 @@ const router = express.Router();
  * 해당 이메일이 가입되어 있으면 possible을 res에 json 형식으로 보낸다
  */
 router.get('/isPossibleId/:email', async(req, res, next) => {
+  // 클라이언트에서 요청한 확인하고자 하는 email 주소
   const email = req.params.email;
   console.log("check : ", req.params);
 
+  // async/await 방식 처리
   try {
+    // 먼저 member_infos 테이블에서 요청에서 받은 email 주소가 있는지 확인
+    // 존재한다면 값이 저장될 것
     const exEmail = await member_infos.find({
       where: { email }
     });
 
+    // exEmail 이 존재하면 state 속성에 impossible을 넣어 전송
     if (exEmail) {
       const json = JSON.stringify({
         state: "impossible"
       });
       return res.end(json);
 
+    // exEmail 이 존재하지 않으면 possible을 넣어 전송
     } else {
       console.log("possible");
 

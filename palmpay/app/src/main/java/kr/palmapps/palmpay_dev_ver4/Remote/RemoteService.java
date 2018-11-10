@@ -1,6 +1,7 @@
 package kr.palmapps.palmpay_dev_ver4.Remote;
 
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import kr.palmapps.palmpay_dev_ver4.Item.MemberInfoItem;
@@ -17,7 +18,7 @@ import retrofit2.http.Query;
  * 서버에 호출할 메소드를 선언하는 인터페이스
  */
 public interface RemoteService {
-    String BASE_URL = "http://10.0.2.2:3000";
+    String BASE_URL = "http://192.168.0.13:3000"/*"http://10.0.2.2:3000"*/;
 
     // node.js auth 관련
     @GET("/auth/isPossibleId/{email}")
@@ -28,5 +29,10 @@ public interface RemoteService {
 
     @POST("/auth/signin")
     Call<JsonObject> goSignIn(@Body MemberInfoItem memberInfoItem);
+
+    @GET("/partners")
+    Call<JsonArray> getAllPartners();
+
+
 
 }
