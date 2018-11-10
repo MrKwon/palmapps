@@ -19,6 +19,6 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: "없음"
     },
   }, {
-      
+    timestamps: false,
   });
 };
