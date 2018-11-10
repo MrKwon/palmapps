@@ -15,9 +15,8 @@ palmapps - PalmPay, PalmPos Frontend and Backend
 
 #### 2018-11-11
 * Backend - Frontend 연동 - 제휴점 리스트, 메뉴판까지 구현
-<br>
 진짜 얼마 안남았다<br>
-1. 비콘 연동, 비콘 정보 조회 db
-2. 진동벨 기능
-3. 주문 내역 전송 기능
-4. palmpos
+1. 비콘 연동, 비콘 정보 조회 db<br>
+2. 진동벨 기능<br>
+3. 주문 내역 전송 기능<br>
+4. palmpos<br>
