@@ -69,6 +69,7 @@
     <string name="prev">이전</string>
     <string name="next">다음</string>
     <string name="complete">완료</string>
+    <string name="checknetwork">Wifi/LTE 연결을 확인하세요</string>
 
     <!--기타 장문 -->
     <string name="withme">손 안에서 더 편리한 일들을 할 수 있게 하는 서비스 개발을 목표로 하는 팀 PalmApps입니다.\n 우리 팀의 첫 번째 관심사는 Mobile Payment와 Kiosk 입니다. 지금은 프로토타입을 테스트하는 단계이지만, 아직 이것은 시작에 불과합니다. 우리에게는 더 큰 목표가 있습니다.\n

@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,7 +24,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
@@ -36,8 +36,13 @@ import kr.palmapps.palmpay_dev_ver4.Handler.BackPressButtonHandler;
 import kr.palmapps.palmpay_dev_ver4.Item.MenuListItem;
 import kr.palmapps.palmpay_dev_ver4.Item.OrderListItem;
 import kr.palmapps.palmpay_dev_ver4.Item.PartnerListItem;
+import kr.palmapps.palmpay_dev_ver4.Remote.RemoteService;
+import kr.palmapps.palmpay_dev_ver4.Remote.ServiceGenerator;
 import kr.palmapps.palmpay_dev_ver4.lib.DevLog;
 import kr.palmapps.palmpay_dev_ver4.lib.DevToast;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 어플리케이션의 메인화면
@@ -48,7 +53,7 @@ public class MainActivity extends AppCompatActivity
     private final String TAG = this.getClass().getSimpleName();
 
     public Boolean isOpened = false;
-    public Boolean isBeaconDetected = false;
+    public Boolean isBeaconDetected = true;
 
     // 화면 요소들
     Toolbar toolbar;
@@ -89,7 +94,7 @@ public class MainActivity extends AppCompatActivity
     ArrayList<MenuListItem> menuList = new ArrayList<>();
 
     public static ArrayList<OrderListItem> orderList = new ArrayList<>();
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -318,6 +323,7 @@ public class MainActivity extends AppCompatActivity
      * PartnerRecyclerView를 세팅하는 메서드
      */
     public void setPartnerRecyclerView() {
+        getAllPartnersList();
 //        dev_VersionPartnerList();
 
         recyclerView_partner = findViewById(R.id.content_main_recycler);
@@ -325,9 +331,62 @@ public class MainActivity extends AppCompatActivity
 
         layoutManager_partner = new LinearLayoutManager(this);
         recyclerView_partner.setLayoutManager(layoutManager_partner);
+    }
 
-        PartnerRecyclerViewAdapter partnerRecyclerView = new PartnerRecyclerViewAdapter(partnerList);
-        recyclerView_partner.setAdapter(partnerRecyclerView);
+    /**
+     * 서버와 통신해서 PartnersList를 받아오는 메서드
+     */
+    public void getAllPartnersList() {
+        RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
+
+        Call<JsonArray> call = remoteService.getAllPartnersList();
+        call.enqueue(new Callback<JsonArray>() {
+            @Override
+            public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+                JsonArray jsonArray = response.body();
+                jsonArraytoPartnerList(jsonArray);
+
+                partnerRVAdapterSetter(partnerList);
+            }
+
+            @Override
+            public void onFailure(Call<JsonArray> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), R.string.checknetwork, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    /**
+     * 서버의 응답을 받고 화면을 그리기 위해 만든 메서드
+     * @param partnerList 무조건 partnerList 가 들어간다
+     */
+    public void partnerRVAdapterSetter(ArrayList<PartnerListItem> partnerList) {
+        PartnerRecyclerViewAdapter pRV = new PartnerRecyclerViewAdapter(partnerList);
+        recyclerView_partner.setAdapter(pRV);
+    }
+
+    /**
+     * 서버에서 응답으로 받은 jsonArray 형식의 데이터를 ArrayList<PartnerListItem> 에 변환해서
+     * ArrayList element 로 삽입하는 메서드
+     * @param jsonArray ArrayList 에 넣을 jsonArray 데이터
+     */
+    public void jsonArraytoPartnerList(JsonArray jsonArray) {
+        PartnerListItem items;
+
+        for (int i = 0; i < jsonArray.size(); i++ ) {
+            JsonObject tmpObject = jsonArray.get(i).getAsJsonObject();
+
+            String partner_name = tmpObject.get("store_name").getAsString();
+            String partner_type = tmpObject.get("store_type").getAsString();
+            String partner_desc = tmpObject.get("desc").getAsString();
+            DevLog.d(TAG, partner_name + " " + partner_type + " " + partner_desc);
+
+            items = new PartnerListItem(partner_name, partner_type, partner_desc);
+            DevLog.d(TAG, items.toString());
+
+            partnerList.add(items);
+            DevLog.d(TAG, partnerList.toString());
+        }
     }
 
     public void setOrderlistRecyclerView() {
@@ -344,26 +403,65 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void getAllMenusList() {
+        RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
+
+        Call<JsonArray> call = remoteService.getAllMenusList(dev_getBeaconId());
+        call.enqueue(new Callback<JsonArray>() {
+            @Override
+            public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+                JsonArray jsonArray = response.body();
+                jsonArraytoMenuList(jsonArray);
+
+                menuListRVAdapterSetter(menuList);
+            }
+
+            @Override
+            public void onFailure(Call<JsonArray> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void jsonArraytoMenuList(JsonArray jsonArray) {
+        MenuListItem items;
+
+        for (int i = 0; i < jsonArray.size(); i++ ) {
+            JsonObject tmpObject = jsonArray.get(i).getAsJsonObject();
+
+            String menu_name = tmpObject.get("menu_name").getAsString();
+            String menu_price = tmpObject.get("menu_price").getAsString();
+            DevLog.d(TAG, menu_name + " " + menu_price);
+
+            items = new MenuListItem(menu_name, menu_price);
+            DevLog.d(TAG, items.toString());
+
+            menuList.add(items);
+            DevLog.d(TAG, menuList.toString());
+        }
+    }
+
+    /**
+     * 구현 이전에 비콘 id 전달하는 메서드
+     * @return (String) 2 - 앤댄썸
+     */
+    public String dev_getBeaconId() {
+        return "2";
+    }
+
     public void setMenuListRecyclerView() {
-        dev_VersionMenuList();
+        getAllMenusList();
 
         recyclerView_menu = findViewById(R.id.content_main_recycler);
         recyclerView_menu.setLayoutManager(new GridLayoutManager(this, 2));
-
-        MenuRecyclerViewAdapter menuRecyclerViewAdapter = new MenuRecyclerViewAdapter(menuList);
-        recyclerView_menu.setAdapter(menuRecyclerViewAdapter);
     }
 
-//    /**
-//     * 서버와 연결하기 전 데이터를 임의로 생성하는 메서드
-//     */
-//    public void dev_VersionPartnerList() {
-//        PartnerListItem items;
-//        for(int i = 0; i < 9; i++){
-//            items = new PartnerListItem("상호명" + String.valueOf(i), "카페/식당", "데이터베이스 연결이 되어있지 않은 리스트입니다.");
-//            partnerList.add(items);
-//        }
-//    }
+    public void menuListRVAdapterSetter(ArrayList<MenuListItem> menuList) {
+        MenuRecyclerViewAdapter mRV = new MenuRecyclerViewAdapter(menuList);
+        recyclerView_menu.setAdapter(mRV);
+    }
+
+
 
     public void dev_VersionMenuList() {
         MenuListItem items;

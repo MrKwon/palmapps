@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 import kr.palmapps.palmpay_dev_ver4.Item.MenuListItem;
 import kr.palmapps.palmpay_dev_ver4.Item.OrderListItem;
-import kr.palmapps.palmpay_dev_ver4.lib.MyApp;
 import kr.palmapps.palmpay_dev_ver4.R;
 import kr.palmapps.palmpay_dev_ver4.lib.DevLog;
 
@@ -42,10 +41,8 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
     @Override
     public void onBindViewHolder(@NonNull final MenuItemViewHolder holder, final int position) {
 
-        final int count = Integer.parseInt(items.get(position).getMenu_count());
-
         holder.menu_name.setText(items.get(position).getMenu_name());
-        holder.menu_price.setText(String.valueOf(count));
+        holder.menu_price.setText(items.get(position).getMenu_price());
         holder.menu_count.setText(items.get(position).getMenu_count());
     }
 
