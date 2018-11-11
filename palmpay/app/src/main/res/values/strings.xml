@@ -59,7 +59,20 @@
     <!--item_menu_list-->
     <string name="menu_name">\@메뉴명</string>
     <string name="menu_price">\@단가</string>
-    <string name="menu_count">0</string>
+    <string name="menu_count">\@수량</string>
+
+    <!--item_myordered_list-->
+    <string name="ordered_title">나의 주문 내역</string>
+    <string name="ordered_store_name">\@상호명</string>
+    <string name="ordered_time">\@2000-01-01 12:00</string>
+    <string name="ordered_menu_name">\@메뉴 이름</string>
+    <string name="ordered_count">\@주문 수량</string>
+    <string name="ordered_paytype">\@지불 수단</string>
+    <string name="ordered_price">\@총 금액</string>
+
+    <string name="ordered_now_list">현재 주문 내역</string>
+    <string name="ordered_past_list">현재 주문 내역</string>
+
 
     <!-- 공통 -->
     <string name="skip_string">...</string>

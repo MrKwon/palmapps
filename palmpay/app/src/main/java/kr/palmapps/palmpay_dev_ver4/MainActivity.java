@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity
 
     // 화면 요소들
     Toolbar toolbar;
-    FloatingActionButton fab;
     DrawerLayout drawer;
     LinearLayout bottomLayout;
     NavigationView navigationView;
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity
     // 버튼들
     Button palm_fast_order;
     Button normal_order;
+    ImageButton fab;
 
     // nav_header_main textview들
     TextView signin_email;
@@ -227,13 +228,14 @@ public class MainActivity extends AppCompatActivity
     public void setViewToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
     }
 
     /**
      * FloatingButton 세팅 메서드
      */
     public void setViewFloatingButton() {
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (ImageButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -446,11 +448,12 @@ public class MainActivity extends AppCompatActivity
             String order_count = orderList.get(i).getOrder_count();
 
             SharedPreferences sharedPreferences = getSharedPreferences("auth", MODE_PRIVATE);
-            String username = sharedPreferences.getString("username", null);
+            String email = sharedPreferences.getString("email", null);
 
             jsonObject.addProperty("order_name", order_name);
             jsonObject.addProperty("order_count", order_count);
-            jsonObject.addProperty("username", username);
+            jsonObject.addProperty("paytype", "palmcredit");
+            jsonObject.addProperty("email", email);
             jsonObject.addProperty("orderee", dev_getBeaconId());
 
             jsonArray.add(jsonObject);

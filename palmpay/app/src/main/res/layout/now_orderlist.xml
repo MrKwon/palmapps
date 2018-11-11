@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparentBackground"
-    android:visibility="invisible">
+    android:layout_below="@+id/toolbar"
+    android:visibility="visible">
 
 
     <RelativeLayout
@@ -15,7 +16,7 @@
         android:layout_marginTop="@dimen/margin_20"
         android:layout_marginRight="@dimen/margin_16"
         android:layout_marginLeft="@dimen/margin_16"
-        android:layout_marginBottom="80dp">
+        android:layout_marginBottom="70dp">
 
         <TextView
             android:id="@+id/header"
