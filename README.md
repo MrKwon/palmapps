@@ -6,7 +6,7 @@ palmapps - PalmPay, PalmPos Frontend and Backend
 * 
 
 ## 프론트 할 일 정리
-* 
+* 메뉴 이미지 저장 및 받아오는 기능
 
 ### Dev Log
 #### 2018-11-07
