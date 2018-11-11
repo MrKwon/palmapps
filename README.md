@@ -18,5 +18,8 @@ palmapps - PalmPay, PalmPos Frontend and Backend
 진짜 얼마 안남았다<br>
 1. 비콘 연동, 비콘 정보 조회 db<br>
 2. 진동벨 기능<br>
-3. 주문 내역 전송 기능<br>
+3. ~~주문 내역 전송 기능~~<br>
 4. palmpos<br>
+
+#### 2018-11-11 19:51
+* Backend - Frontend 연동 - 주문 내역 전송 구현 완료
