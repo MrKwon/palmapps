@@ -1,6 +1,13 @@
 # palmapps
 palmapps - PalmPay, PalmPos Frontend and Backend
 
+## 백 할 일 정리
+* 쿠폰 발급 API
+* 
+
+## 프론트 할 일 정리
+* 메뉴 이미지 저장 및 받아오는 기능
+
 ### Dev Log
 #### 2018-11-07
 * 프론트엔드부분은 거의 완성단계
@@ -18,5 +25,9 @@ palmapps - PalmPay, PalmPos Frontend and Backend
 진짜 얼마 안남았다<br>
 1. 비콘 연동, 비콘 정보 조회 db<br>
 2. 진동벨 기능<br>
-3. 주문 내역 전송 기능<br>
+3. ~~주문 내역 전송 기능~~<br>
 4. palmpos<br>
+
+#### 2018-11-11 19:51
+* Backend - Frontend 연동 - 주문 내역 전송 구현 완료
+
