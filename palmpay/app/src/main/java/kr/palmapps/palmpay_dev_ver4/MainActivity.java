@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -196,7 +197,13 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.palm_fast_order:
-                DevLog.d(TAG, "palm_fast_order");
+                if(orderList.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "주문할 내역이 없습니다.", Toast.LENGTH_SHORT).show();
+                } else {
+                    DevLog.d(TAG, "palm_fast_order");
+                    JsonArray orderList = orderListToJsonArray();
+                    sendUserOrderList(orderList);
+                }
                 break;
             case R.id.normal_order:
                 // 프로토타입 테스트 버전에서는 지원하지 않는 기능
@@ -241,19 +248,27 @@ public class MainActivity extends AppCompatActivity
      * Boolean isOpened 변수가 true 이면 isOpened를 false로 바꾸고 noworderlist 프래그먼트를 닫고 아이콘을 장바구니 모양으로 바꿈
      */
     public void floatingButtonAction() {
-        if(isOpened) {
-            isOpened = false;
-            fab.setImageResource(R.drawable.ic_shopping_cart_white_24dp);
-            // noworderlist 목록 화면 close
-            now_orderlist.setVisibility(View.INVISIBLE);
+         if(isOpened) {
+             floatingButtonClose();
+         } else {
+             floatingButtonOpen();
+         }
+    }
 
-        } else if (!isOpened) {
-            isOpened = true;
-            fab.setImageResource(R.drawable.ic_close_white_24dp);
-            // noworderlist 목록 화면 오픈
-            now_orderlist.setVisibility(View.VISIBLE);
-            setOrderlistRecyclerView();
-        }
+    public void floatingButtonClose() {
+        isOpened = false;
+        fab.setImageResource(R.drawable.ic_shopping_cart_white_24dp);
+        // noworderlist 목록 화면 close
+        now_orderlist.setVisibility(View.INVISIBLE);
+
+    }
+
+    public void floatingButtonOpen() {
+        isOpened = true;
+        fab.setImageResource(R.drawable.ic_close_white_24dp);
+        // noworderlist 목록 화면 오픈
+        now_orderlist.setVisibility(View.VISIBLE);
+        setOrderlistRecyclerView();
     }
 
     /**
@@ -295,7 +310,7 @@ public class MainActivity extends AppCompatActivity
         if (bool) {
             // beacon detected
             setToolBarString("@상호명");
-            setMenuListRecyclerView();
+            initMenuListRecyclerView();
             controlButtonsTransparent(true);
             setContentMainHeight(true);
 
@@ -389,6 +404,73 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * 서버에 주문을 요청하는 메서드
+     *
+     * @param jsonArray
+     */
+    public void sendUserOrderList(JsonArray jsonArray) {
+        RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
+
+        Call<JsonObject> call = remoteService.sendUserOrderList(jsonArray);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonElement result = response.body().get("state");
+
+                if (result.getAsString().equals("success")) {
+                    getResultOfSendOrderList();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), R.string.checknetwork, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    /**
+     * 서버로 보낼 request 를 위해 ArrayList<OrderListItem> 을 JsonArray 형식으로 변환하는 메서드
+     * @return jsonArray 형식으로 변환한 orderList 객체
+     */
+    public JsonArray orderListToJsonArray() {
+
+        JsonArray jsonArray = new JsonArray();
+
+        for ( int i = 0; i < orderList.size(); i++ ) {
+            JsonObject jsonObject = new JsonObject();
+
+            String order_name = orderList.get(i).getOrder_name();
+            String order_count = orderList.get(i).getOrder_count();
+
+            SharedPreferences sharedPreferences = getSharedPreferences("auth", MODE_PRIVATE);
+            String username = sharedPreferences.getString("username", null);
+
+            jsonObject.addProperty("order_name", order_name);
+            jsonObject.addProperty("order_count", order_count);
+            jsonObject.addProperty("username", username);
+            jsonObject.addProperty("orderee", dev_getBeaconId());
+
+            jsonArray.add(jsonObject);
+        }
+
+        return jsonArray;
+    }
+
+    /**
+     * sendUserOrderList request 가 서버에 정상적으로 요청되고 response 를 정상적으로 받을 경우 실행되는 메서드
+     * Toast 메시지를 띠워주고 orderList 를 비운다.
+     */
+    public void getResultOfSendOrderList() {
+        Toast.makeText(getApplicationContext(), "주문이 성공적으로 완료되었습니다.", Toast.LENGTH_LONG).show();
+        orderList.clear();
+        floatingButtonClose();
+        setMenuListRecyclerView();
+        goMyOrdered();
+    }
+
     public void setOrderlistRecyclerView() {
         recyclerView_order = findViewById(R.id.now_orderlist_recycler);
         recyclerView_order.setHasFixedSize(true);
@@ -449,9 +531,17 @@ public class MainActivity extends AppCompatActivity
         return "2";
     }
 
-    public void setMenuListRecyclerView() {
+    public void initMenuListRecyclerView() {
         getAllMenusList();
 
+        recyclerView_menu = findViewById(R.id.content_main_recycler);
+        recyclerView_menu.setLayoutManager(new GridLayoutManager(this, 2));
+    }
+
+    /**
+     * RecyclerView 렌더링을 다시하기 위한 메서드
+     */
+    public void setMenuListRecyclerView() {
         recyclerView_menu = findViewById(R.id.content_main_recycler);
         recyclerView_menu.setLayoutManager(new GridLayoutManager(this, 2));
     }
@@ -459,16 +549,6 @@ public class MainActivity extends AppCompatActivity
     public void menuListRVAdapterSetter(ArrayList<MenuListItem> menuList) {
         MenuRecyclerViewAdapter mRV = new MenuRecyclerViewAdapter(menuList);
         recyclerView_menu.setAdapter(mRV);
-    }
-
-
-
-    public void dev_VersionMenuList() {
-        MenuListItem items;
-        for(int i = 0; i < 5; i++) {
-            items = new MenuListItem("메뉴 " + String.valueOf(i), "100", "0");
-            menuList.add(items);
-        }
     }
 
     /**

@@ -3,7 +3,6 @@ module.exports = (sequelize, DataTypes) => {
     menu: {
       type: DataTypes.STRING(10),
       allowNull: false,
-      unique: true,
     },
     count: {
       type: DataTypes.INTEGER.UNSIGNED,

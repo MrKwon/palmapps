@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 public class MyOrderedActivity extends AppCompatActivity {
 
-    private final String TAG = "내 주문내역";
+    private final String TAG = this.getClass().getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

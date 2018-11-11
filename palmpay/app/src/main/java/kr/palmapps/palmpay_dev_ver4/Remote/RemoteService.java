@@ -4,7 +4,10 @@ package kr.palmapps.palmpay_dev_ver4.Remote;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
+
 import kr.palmapps.palmpay_dev_ver4.Item.MemberInfoItem;
+import kr.palmapps.palmpay_dev_ver4.Item.OrderListItem;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -15,7 +18,7 @@ import retrofit2.http.Path;
  * 서버에 호출할 메서드를 선언하는 인터페이스
  */
 public interface RemoteService {
-    String BASE_URL = "http://192.168.0.13:3000"/*"http://10.0.2.2:3000"*/;
+    String BASE_URL = /*"http://192.168.0.13:3000"*/"http://10.0.2.2:3000";
 
     // node.js auth 관련
     @GET("/auth/isPossibleId/{email}")
@@ -38,5 +41,8 @@ public interface RemoteService {
 
     @GET("/menu/{id}")
     Call<JsonObject> getStoreName(@Path("id") String id);
+
+    @POST("/order/send")
+    Call<JsonObject> sendUserOrderList(@Body JsonArray jsonArray);
 
 }

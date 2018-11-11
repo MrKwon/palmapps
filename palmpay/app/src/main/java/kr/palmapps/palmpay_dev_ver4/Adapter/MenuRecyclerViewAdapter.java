@@ -123,8 +123,6 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         public void addBtnRoutine(View view) {
             DevLog.d("ORDER LIST BUTTON","menu_add btn Clicked!");
             menu_count.setText(String.valueOf(intChanger(menu_count) + 1));
-            String tmp_menu_name = getMenu_name();
-            Toast.makeText(view.getContext(), tmp_menu_name, Toast.LENGTH_LONG).show();
         }
 
         public void removeBtnRoutine(View view) {
