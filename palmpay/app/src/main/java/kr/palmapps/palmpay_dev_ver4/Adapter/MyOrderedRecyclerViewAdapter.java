@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import kr.palmapps.palmpay_dev_ver4.Item.MyOrderListItem;
 import kr.palmapps.palmpay_dev_ver4.R;
@@ -33,11 +32,11 @@ public class MyOrderedRecyclerViewAdapter extends RecyclerView.Adapter<MyOrdered
 
     @Override
     public void onBindViewHolder(@NonNull MyOrderedItemviewHolder holder, int position) {
-        holder.ordered_store_name   .setText(items.get(position).getOrdereeStoreName());
-        holder.ordered_time         .setText(items.get(position).getOrderedTime());
-        holder.ordered_menu_name    .setText(items.get(position).getOrderedMenuName());
-        holder.ordered_count        .setText(items.get(position).getOrderedMenuCount());
-        holder.ordered_price        .setText(items.get(position).getOrderedPrice());
+        holder.ordered_store_name   .setText(items.get(position).getOrdered_store_name());
+        holder.ordered_time         .setText(items.get(position).getOrdered_time());
+        holder.ordered_menu_name    .setText(items.get(position).getOrdered_menu_name());
+        holder.ordered_count        .setText(items.get(position).getOrdered_count());
+        holder.ordered_price        .setText(items.get(position).getOrdered_price());
     }
 
     @Override

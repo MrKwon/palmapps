@@ -45,4 +45,12 @@ public interface RemoteService {
     @POST("/order/send")
     Call<JsonObject> sendUserOrderList(@Body JsonArray jsonArray);
 
+
+    //MyOrderedActivity에서의 메서드들
+    @GET("/order/noworderlist/{email}")
+    Call<JsonArray> getNowOrderList(@Path("email") String email);
+
+    @POST("/order/pastorderlist")
+    Call<JsonArray> getPastOrderList(@Body String email);
+
 }

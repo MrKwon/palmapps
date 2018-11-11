@@ -1,62 +1,69 @@
 package kr.palmapps.palmpay_dev_ver4.Item;
 
-import java.util.Date;
-
 public class MyOrderListItem {
-    String ordereeStoreName;
-    String orderedTime;
+    String ordered_store_name;
+    String ordered_time;
 
-    String orderedMenuName;
-    String orderedMenuCount;
+    String ordered_menu_name;
+    String ordered_count;
 
-    String PaymentType;
-    String orderedPrice;
+    String paytype;
+    String ordered_price;
 
-    public String getOrdereeStoreName() {
-        return ordereeStoreName;
+    public MyOrderListItem(String s1, String s2, String s3, String s4, String s5, String s6){
+        this.ordered_store_name = s1;
+        this.ordered_time       = s2;
+        this.ordered_menu_name  = s3;
+        this.ordered_count      = s4;
+        this.paytype            = s5;
+        this.ordered_price      = s6;
     }
 
-    public void setOrdereeStoreName(String ordereeStoreName) {
-        this.ordereeStoreName = ordereeStoreName;
+    public String getOrdered_store_name() {
+        return ordered_store_name;
     }
 
-    public String getOrderedTime() {
-        return orderedTime;
+    public void setOrdered_store_name(String ordered_store_name) {
+        this.ordered_store_name = ordered_store_name;
     }
 
-    public void setOrderedTime(String orderedTime) {
-        this.orderedTime = orderedTime;
+    public String getOrdered_time() {
+        return ordered_time;
     }
 
-    public String getOrderedMenuName() {
-        return orderedMenuName;
+    public void setOrdered_time(String ordered_time) {
+        this.ordered_time = ordered_time;
     }
 
-    public void setOrderedMenuName(String orderedMenuName) {
-        this.orderedMenuName = orderedMenuName;
+    public String getOrdered_menu_name() {
+        return ordered_menu_name;
     }
 
-    public String getOrderedMenuCount() {
-        return orderedMenuCount;
+    public void setOrdered_menu_name(String ordered_menu_name) {
+        this.ordered_menu_name = ordered_menu_name;
     }
 
-    public void setOrderedMenuCount(String orderedMenuCount) {
-        this.orderedMenuCount = orderedMenuCount;
+    public String getOrdered_count() {
+        return ordered_count;
     }
 
-    public String getPaymentType() {
-        return PaymentType;
+    public void setOrdered_count(String ordered_count) {
+        this.ordered_count = ordered_count;
     }
 
-    public void setPaymentType(String paymentType) {
-        PaymentType = paymentType;
+    public String getPaytype() {
+        return paytype;
     }
 
-    public String getOrderedPrice() {
-        return orderedPrice;
+    public void setPaytype(String paytype) {
+        this.paytype = paytype;
     }
 
-    public void setOrderedPrice(String orderedPrice) {
-        this.orderedPrice = orderedPrice;
+    public String getOrdered_price() {
+        return ordered_price;
+    }
+
+    public void setOrdered_price(String ordered_price) {
+        this.ordered_price = ordered_price;
     }
 }
