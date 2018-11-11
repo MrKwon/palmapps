@@ -1,6 +1,13 @@
 # palmapps
 palmapps - PalmPay, PalmPos Frontend and Backend
 
+## 백 할 일 정리
+* 쿠폰 발급 API
+* 
+
+## 프론트 할 일 정리
+* 
+
 ### Dev Log
 #### 2018-11-07
 * 프론트엔드부분은 거의 완성단계
@@ -23,3 +30,4 @@ palmapps - PalmPay, PalmPos Frontend and Backend
 
 #### 2018-11-11 19:51
 * Backend - Frontend 연동 - 주문 내역 전송 구현 완료
+
