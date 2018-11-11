@@ -7,7 +7,11 @@ module.exports = (sequelize, DataTypes) => {
     count: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
-
+    },
+    paytype: {
+      type: DataTypes.ENUM,
+      values: ['palmcredit', 'card', 'coupon', 'account'],
+      allowNull: false,
     },
     complete: {
       type: DataTypes.BOOLEAN,
