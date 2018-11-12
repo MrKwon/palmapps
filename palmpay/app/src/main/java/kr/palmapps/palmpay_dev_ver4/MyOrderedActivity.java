@@ -49,6 +49,7 @@ public class MyOrderedActivity extends AppCompatActivity implements View.OnClick
 
         setViewButtons();
         setMyOrderRecyclerView();
+        getNowOrderList();
     }
 
     @Override
@@ -67,6 +68,7 @@ public class MyOrderedActivity extends AppCompatActivity implements View.OnClick
                 if(isNowOrderListClicked) {
                     orderListButtonRenderSetter();
                 }
+                getPastOrderList();
                 break;
         }
     }
@@ -141,6 +143,38 @@ public class MyOrderedActivity extends AppCompatActivity implements View.OnClick
         });
     }
 
+    public void getPastOrderList() {
+        SharedPreferences sharedPreferences = getSharedPreferences("auth", MODE_PRIVATE);
+        String email = sharedPreferences.getString("email", null);
+
+        JsonObject emailJsonObject = new JsonObject();
+        emailJsonObject.addProperty("email", email);
+
+        DevLog.d(TAG, emailJsonObject.toString());
+
+        RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
+        Call<JsonArray> call = remoteService.getPastOrderList(emailJsonObject);
+        call.enqueue(new Callback<JsonArray>() {
+            @Override
+            public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+                if(response.body() != null) {
+                    JsonArray jsonArray = response.body();
+                    myOrderPastList = reverseJsonArrayToOrderList(jsonArray);
+
+                    orderListRVAdapterSetter(myOrderPastList);
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "과거 주문 내역이 없습니다", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonArray> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), R.string.checknetwork, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     public ArrayList<MyOrderListItem> jsonArrayToOrderList(JsonArray jsonArray) {
         ArrayList<MyOrderListItem> list = new ArrayList<>();
 
@@ -150,7 +184,33 @@ public class MyOrderedActivity extends AppCompatActivity implements View.OnClick
             JsonObject tmpObject = jsonArray.get(i).getAsJsonObject();
 
             String ordered_store_name = tmpObject.get("ordered_store_name").getAsString();
-            String ordered_time       = tmpObject.get("ordered_time").getAsString();
+            // 시간은 임시 구현, 수정 필요
+            String time       = tmpObject.get("ordered_time").getAsString();
+            String ordered_time = time.substring(0, 10) + "\n" + time.substring(12, 16);
+            String ordered_menu_name  = tmpObject.get("ordered_menu_name").getAsString();
+            String ordered_count      = tmpObject.get("ordered_count").getAsString();
+            String ordered_price      = tmpObject.get("ordered_price").getAsString();
+
+            items = new MyOrderListItem(ordered_store_name, ordered_time, ordered_menu_name, ordered_count, null, ordered_price);
+
+            list.add(items);
+        }
+
+        return list;
+    }
+
+    public ArrayList<MyOrderListItem> reverseJsonArrayToOrderList(JsonArray jsonArray) {
+        ArrayList<MyOrderListItem> list = new ArrayList<>();
+
+        MyOrderListItem items;
+
+        for (int i = jsonArray.size() - 1 ; i >= 0 ; i--) {
+            JsonObject tmpObject = jsonArray.get(i).getAsJsonObject();
+
+            String ordered_store_name = tmpObject.get("ordered_store_name").getAsString();
+            // 시간은 임시 구현, 수정 필요
+            String time       = tmpObject.get("ordered_time").getAsString();
+            String ordered_time = time.substring(0, 10) + "\n" + time.substring(12, 16);
             String ordered_menu_name  = tmpObject.get("ordered_menu_name").getAsString();
             String ordered_count      = tmpObject.get("ordered_count").getAsString();
             String ordered_price      = tmpObject.get("ordered_price").getAsString();
