@@ -36,7 +36,7 @@
                 android:layout_marginRight="@dimen/margin_04"
                 android:layout_gravity="center"
                 android:text="@string/ordered_time"
-                android:textSize="@dimen/medium_text"
+                android:textSize="@dimen/small_text"
                 android:gravity="center" />
 
         </LinearLayout>

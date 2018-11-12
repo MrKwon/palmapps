@@ -18,7 +18,10 @@ import retrofit2.http.Path;
  * 서버에 호출할 메서드를 선언하는 인터페이스
  */
 public interface RemoteService {
-    String BASE_URL = /*"http://192.168.0.13:3000"*/"http://10.0.2.2:3000";
+    String Emulator = "http://10.0.2.2:3000";
+    String GalaxyS7 = "http://192.168.0.13:3000";
+
+    String BASE_URL = GalaxyS7;
 
     // node.js auth 관련
     @GET("/auth/isPossibleId/{email}")
@@ -51,6 +54,6 @@ public interface RemoteService {
     Call<JsonArray> getNowOrderList(@Body JsonObject jsonObject);
 
     @POST("/order/pastorderlist")
-    Call<JsonArray> getPastOrderList(@Body String email);
+    Call<JsonArray> getPastOrderList(@Body JsonObject jsonObject);
 
 }
