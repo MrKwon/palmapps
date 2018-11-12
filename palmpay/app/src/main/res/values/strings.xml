@@ -71,7 +71,7 @@
     <string name="ordered_price">\@총 금액</string>
 
     <string name="ordered_now_list">현재 주문 내역</string>
-    <string name="ordered_past_list">현재 주문 내역</string>
+    <string name="ordered_past_list">지난 주문 내역</string>
 
 
     <!-- 공통 -->

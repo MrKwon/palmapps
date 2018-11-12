@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MyOrderedActivity">
 
     <TextView
@@ -17,10 +18,8 @@
         android:gravity="center"/>
 
     <TextView
-        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/header"
         android:layout_marginRight="@dimen/margin_08"
         android:layout_marginLeft="@dimen/margin_08"
         android:background="#D8D8D8"/>
@@ -29,30 +28,42 @@
         android:id="@+id/selector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/divider"
-        android:paddingRight="@dimen/margin_16"
-        android:paddingLeft="@dimen/margin_16"
+        android:layout_marginRight="@dimen/margin_44"
+        android:layout_marginLeft="@dimen/margin_44"
         android:orientation="horizontal">
 
-        <ImageButton
+        <TextView
+            android:id="@+id/ordered_now_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/ordered_now_list"
-            android:background="@drawable/btn_myorder_unactivate"/>
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:background="@drawable/btn_myorder_activated"/>
 
-        <Button
+        <TextView
+            android:id="@+id/ordered_past_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/ordered_past_list"/>
+            android:text="@string/ordered_past_list"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:background="@drawable/btn_myorder_deactivated"/>
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginRight="@dimen/margin_08"
+        android:layout_marginLeft="@dimen/margin_08"
+        android:background="#D8D8D8"/>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/selector">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/myOrdered"
@@ -62,4 +73,4 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-</RelativeLayout>
+</LinearLayout>

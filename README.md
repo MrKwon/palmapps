@@ -31,3 +31,6 @@ palmapps - PalmPay, PalmPos Frontend and Backend
 #### 2018-11-11 19:51
 * Backend - Frontend 연동 - 주문 내역 전송 구현 완료
 
+#### 2018-11-12
+* Backend - Frontend 연동 - 주문 내역(현재주문/과거주문) 받아오기 구현 중, front는 잘 되었으나 서버쪽에서 404 에러가 뜸, 자야될 시간이라 자야될 것 
+
