@@ -1,5 +1,7 @@
 const express = require('express');
+const Sequelize = require('sequelize');
 const { store_infos, member_infos, menupans, orderlists } = require('../models');
+const Op = Sequelize.Op;
 
 const router = express.Router();
 
@@ -23,8 +25,17 @@ router.post('/send', async(req, res, next) => {
 
     for ( let i = 0; i < orderArray.length; i++) {
       const { order_name, order_count, orderee, paytype } = orderArray[i];
+
+      const menu_id = await menupans.findOne({
+        attributes: ['id'],
+        where: {
+          menu_name: order_name,
+        }
+      });
+      console.log(menu_id.id);
+
       await orderlists.create({
-        menu: order_name,
+        menu: menu_id.id,
         count: order_count,
         orderer: username_id,
         paytype,
@@ -45,37 +56,44 @@ router.post('/send', async(req, res, next) => {
 });
 
 // 주문 내역을 가져오는 메서드
-router.get('/noworderlist', async(req, res, next) => {
-  const requester_email = req.params.email;
-  console.log(requester_email);
+router.post('/noworderlist', async(req, res, next) => {
+  const req_email = req.body.email;
+  console.log(req_email);
 
   try {
-    const requester_id = await member_infos.findOne({
+    const req_id_json = await member_infos.findOne({
       attributes: ['id'],
       where: {
-        email: requester_email,
+        email: req_email,
       }
     });
-    console.log(requester_id);
+    console.log(req_id_json.id);
 
-    const requester_orderlist = await orderlists.findAll({
+    const req_id = req_id_json.id;
+
+    const req_orderlist = await orderlists.findAll({
+      attributes: [''],
       where: {
-        orderer: requester_id.id,
-        complete: { [Op.ne] : 1 },
+        orderer: req_id,
+        complete: { [Op.eq]: 0 },
       }
     });
-    console.log(requester_orderlist);
+    console.log(req_orderlist);
 
-    const json = JSON.stringify(requester_orderlist);
-    return res.end(json);
+    console.log(req_orderlist.body);
+    console.log(req_orderlist.params);
+
+    const json = JSON.stringify(req_orderlist);
+    return res.end();
+
   } catch(error) {
     console.error(error);
     next(error);
   }
 });
 
-router.get('pastorderlist', async(req, res, next) => {
-
-});
+// router.get('/pastorderlist', async(req, res, next) => {
+//
+// });
 
 module.exports = router;

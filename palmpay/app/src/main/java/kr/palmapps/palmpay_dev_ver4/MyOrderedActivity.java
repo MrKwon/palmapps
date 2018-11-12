@@ -113,10 +113,13 @@ public class MyOrderedActivity extends AppCompatActivity implements View.OnClick
         SharedPreferences sharedPreferences = getSharedPreferences("auth", MODE_PRIVATE);
         String email = sharedPreferences.getString("email", null);
 
-        DevLog.d(TAG, email);
+        JsonObject emailJsonObject = new JsonObject();
+        emailJsonObject.addProperty("email", email);
+
+        DevLog.d(TAG, emailJsonObject.toString());
 
         RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
-        Call<JsonArray> call = remoteService.getNowOrderList(email);
+        Call<JsonArray> call = remoteService.getNowOrderList(emailJsonObject);
         call.enqueue(new Callback<JsonArray>() {
             @Override
             public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
