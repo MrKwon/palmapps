@@ -27,4 +27,8 @@ db.orderlists.belongsTo(db.store_infos, { foreignKey: 'orderee', targetKey: 'id'
 db.store_infos.hasMany(db.menupans, { foreignKey: 'store_name', sourceKey: 'id' });
 db.menupans.belongsTo(db.store_infos, { foreignKey: 'store_name', targetKey: 'id' });
 
+// menupans id 하나가 orderlist에 여러 개의 order_name 들을 가지고 있음
+db.menupans.hasMany(db.orderlists, { foreignKey: 'menu', sourceKey: 'id' });
+db.orderlists.belongsTo(db.menupans, { foreignKey: 'menu', sourceKey: 'id' });
+
 module.exports = db;
