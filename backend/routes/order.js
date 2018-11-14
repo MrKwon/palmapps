@@ -14,17 +14,17 @@ router.post('/send', async(req, res, next) => {
   console.log(req.body.length);
 
   try{
-    const userinfo = await member_infos.find({
+    const user_info = await member_infos.find({
       attributes: ['id'],
       where: {
         email: order_array[0].email
       }
     });
 
-    const username_id = userinfo.id;
+    const username_id = user_info.id;
 
     for ( let i = 0; i < order_array.length; i++) {
-      const { order_name, order_count, orderee, paytype } = order_array[i];
+      const { order_name, order_count, orderee_id, paytype } = order_array[i];
 
       const menu_id = await menupans.findOne({
         attributes: ['id'],
@@ -37,9 +37,9 @@ router.post('/send', async(req, res, next) => {
       await orderlists.create({
         menu_id: menu_id.id,
         count: order_count,
-        orderer: username_id,
+        orderer_id: username_id,
         paytype,
-        orderee
+        orderee_id,
       });
     }
 
@@ -77,9 +77,9 @@ router.post('/noworderlist', async(req, res, next) => {
     // complete 속성이 0인 모든 row 들을 orderee orderer, menu, count, createdAt 을
     // JsonArray 형식으로 불러옴 - 여러개이기 때문에
     const user_orderlist = await orderlists.findAll({
-      attributes: ['orderee', 'createdAt', 'menu_id', 'count' ],
+      attributes: ['orderee_id', 'createdAt', 'menu_id', 'count' ],
       where: {
-        orderer: reqester_id,
+        orderer_id: reqester_id,
         complete: { [Op.eq]: 0 },
       }
     });
@@ -96,14 +96,14 @@ router.post('/noworderlist', async(req, res, next) => {
     let result_json_array = [ ];
     for(let i = 0; i < tmp_json_array.length; i++ ) {
       console.log(">>>>>>>>>>>>>", i);
-      const { orderee, createdAt, menu_id, count } = tmp_json_array[i];
+      const { orderee_id, createdAt, menu_id, count } = tmp_json_array[i];
       const tmp_store_name = await store_infos.findOne({
         attributes: ['store_name'],
         where: {
-          id: orderee
+          id: orderee_id
         }
       })
-      const ordered_store_name = JSON.parse(JSON.stringify(tmp_store_name)).store_name;
+      const ordered_store_name = JSON.parse(JSON.stringify(tmp_store_name)).store_name_id;
       console.log(ordered_store_name);
 
       const tmp_menu_info = await menupans.findOne({
@@ -162,9 +162,9 @@ router.post('/pastorderlist', async(req, res, next) => {
     // complete 속성이 0인 모든 row 들을 orderee orderer, menu, count, createdAt 을
     // JsonArray 형식으로 불러옴 - 여러개이기 때문에
     const user_orderlist = await orderlists.findAll({
-      attributes: ['orderee', 'createdAt', 'menu_id', 'count' ],
+      attributes: ['orderee_id', 'createdAt', 'menu_id', 'count' ],
       where: {
-        orderer: reqester_id,
+        orderer_id: reqester_id,
         complete: { [Op.eq]: 1 },
       }
     });
@@ -181,14 +181,14 @@ router.post('/pastorderlist', async(req, res, next) => {
     let result_json_array = [ ];
     for(let i = 0; i < tmp_json_array.length; i++ ) {
       console.log(">>>>>>>>>>>>>", i);
-      const { orderee, createdAt, menu_id, count } = tmp_json_array[i];
+      const { orderee_id, createdAt, menu_id, count } = tmp_json_array[i];
       const tmp_store_name = await store_infos.findOne({
         attributes: ['store_name'],
         where: {
-          id: orderee
+          id: orderee_id
         }
       })
-      const ordered_store_name = JSON.parse(JSON.stringify(tmp_store_name)).store_name;
+      const ordered_store_name = JSON.parse(JSON.stringify(tmp_store_name)).store_name_id;
       console.log(ordered_store_name);
 
       const tmp_menu_info = await menupans.findOne({
@@ -214,15 +214,19 @@ router.post('/pastorderlist', async(req, res, next) => {
     }
 
     const json = JSON.stringify(result_json_array);
-    // console.log(reqester_orderlist.body);
-    // console.log(reqester_orderlist.params);
-
-    // const json = JSON.stringify(req_orderlist);
     return res.end(json);
 
   } catch(error) {
     console.error(error);
     next(error);
+  }
+});
+
+router.patch('/complete/:id', async(req, res, next) => {
+  const order_id = req.params.id;
+
+  try {
+    const result = await 
   }
 });
 
