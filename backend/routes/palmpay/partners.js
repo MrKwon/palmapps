@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/', async(req, res, next) => {
   try{
     const allPartners = await store_infos.findAll({
-      attributes: ['store_name', 'store_type', 'desc'],
+      attributes: ['store_name', 'store_type', 'store_desc'],
     });
 
     const json = JSON.stringify(allPartners);

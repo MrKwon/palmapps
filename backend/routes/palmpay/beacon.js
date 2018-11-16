@@ -4,11 +4,12 @@ const { store_infos } = require('../../models');
 const router = express.Router();
 
 router.post('/', async(req, res, next) => {
-  const beacon_info = req.body;
+  const beacon_info = req.body.store_id;
+  console.log(beacon_info);
 
   try {
     const store_name = await store_infos.findOne({
-      attributes: ['store_id'],
+      attributes: ['id'],
       where: {
         store_beacon_info: beacon_info
       }
@@ -17,11 +18,11 @@ router.post('/', async(req, res, next) => {
     const json = JSON.stringify(store_name);
 
     return res.end(json);
+
   } catch (error) {
     console.error(error);
     next(error);
   }
 });
-
 
 module.exports = router;
