@@ -42,6 +42,7 @@ public class PermissionActivity extends AppCompatActivity {
         String [] permissions = new String[] {
                 Manifest.permission.INTERNET,
                 Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.BLUETOOTH,
         };
 
         List<String> listPermissionsNeeded = new ArrayList<>();

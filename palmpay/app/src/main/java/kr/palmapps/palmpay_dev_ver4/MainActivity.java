@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity
     private final String TAG = this.getClass().getSimpleName();
 
     public Boolean isOpened = false;
-    public Boolean isBeaconDetected = true;
+    public Boolean isBeaconDetected = false;
 
     // 화면 요소들
     Toolbar toolbar;
@@ -101,9 +100,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        Intent intent = getIntent();
-//        isBeaconDetected = Boolean.parseBoolean(intent.getStringExtra("isBeaconDetected"));
-//        DevLog.d(TAG, intent.getStringExtra("isBeaconDetected"));
+        Intent intent = getIntent();
+        isBeaconDetected = Boolean.parseBoolean(intent.getStringExtra("isBeaconDetected"));
+//        DevLog.d(TAG, intent.getBooleanExtra("isBeaconDetected", ));
 
 //        dev_isBeaconDetectedController();
         setViewToolbar();
@@ -311,7 +310,8 @@ public class MainActivity extends AppCompatActivity
     public void setContent(Boolean bool) {
         if (bool) {
             // beacon detected
-            setToolBarString("@상호명");
+//            setToolBarString("@상호명");
+            getStoreName();
             initMenuListRecyclerView();
             controlButtonsTransparent(true);
             setContentMainHeight(true);
@@ -454,7 +454,7 @@ public class MainActivity extends AppCompatActivity
             jsonObject.addProperty("order_count", order_count);
             jsonObject.addProperty("paytype", "palmcredit");
             jsonObject.addProperty("email", email);
-            jsonObject.addProperty("orderee", dev_getBeaconId());
+            jsonObject.addProperty("orderee", getBeaconId());
 
             jsonArray.add(jsonObject);
         }
@@ -491,11 +491,13 @@ public class MainActivity extends AppCompatActivity
     public void getAllMenusList() {
         RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
 
-        Call<JsonArray> call = remoteService.getAllMenusList(dev_getBeaconId());
+        Call<JsonArray> call = remoteService.getAllMenusList(getBeaconId());
         call.enqueue(new Callback<JsonArray>() {
             @Override
             public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
                 JsonArray jsonArray = response.body();
+                DevLog.d(TAG ,jsonArray.toString());
+
                 jsonArraytoMenuList(jsonArray);
 
                 menuListRVAdapterSetter(menuList);
@@ -526,12 +528,45 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+//    @GET("/menu/{id}")
+//    Call<JsonObject> getStoreName(@Path("id") String id);
+    public void getStoreName() {
+        RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
+
+        Call<JsonObject> call = remoteService.getStoreName(getBeaconId());
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonObject jsonObject = response.body();
+
+                String store_name = jsonObject.get("store_name").getAsString();
+
+                setToolbarTitle(store_name);
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void setToolbarTitle(String string) {
+        toolbar.setTitle(string);
+//        toolbar.setForegroundGravity(View.TEXT_ALIGNMENT_CENTER);
+    }
+
     /**
      * 구현 이전에 비콘 id 전달하는 메서드
-     * @return (String) 2 - 앤댄썸
+     * 필요할 때만 실행되므로 if 문을 통해 extra 없는 경우는 검사하지 않아도 됨
+     * @return (String) 1 - 앤댄썸
      */
-    public String dev_getBeaconId() {
-        return "2";
+    public String getBeaconId() {
+        String store_id;
+        Bundle extras = getIntent().getExtras();
+        store_id = extras.getString("store_id");
+
+        return store_id;
     }
 
     public void initMenuListRecyclerView() {
@@ -616,40 +651,6 @@ public class MainActivity extends AppCompatActivity
      */
     public void setBackPressButtonHandler() {
         backPressButtonHandler = new BackPressButtonHandler(this);
-    }
-
-    public void dev_isBeaconDetectedController(/*final Intent intent*/) {
-        // 비콘 인식 구현 이전에 루틴 컨트롤을 위해
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle("DEV MODE")
-                .setMessage("isBeaconDetected Controller")
-                .setCancelable(false)
-                .setPositiveButton("true", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        isBeaconDetected = true;
-
-//                        intent.putExtra("isBeaconDetected", String.valueOf(isBeaconDetected));
-//                        startActivity(intent);
-
-                        finish();
-                    }
-                })
-                .setNegativeButton("false", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        isBeaconDetected = false;
-
-//                        intent.putExtra("isBeaconDetected", String.valueOf(isBeaconDetected));
-//                        startActivity(intent);
-
-                        finish();
-                    }
-                });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
     public void setNavHeaders() {
