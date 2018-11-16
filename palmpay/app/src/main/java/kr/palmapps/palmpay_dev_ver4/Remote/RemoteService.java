@@ -22,11 +22,11 @@ public interface RemoteService {
     String GalaxyS7 = "http://192.168.0.13:3000";
     String tmp = "http://192.168.216.149:3000";
 
-    String BASE_URL = tmp;
+    String BASE_URL = GalaxyS7;
 
     // IndexActivity에서의 메서드들
     @POST("/beacon")
-    Call<JsonObject> getStoreIdUsingBeacon(@Body String string);
+    Call<JsonObject> getStoreIdUsingBeacon(@Body JsonObject jsonObject);
 
     // node.js auth 관련
     @GET("/auth/isPossibleId/{email}")
