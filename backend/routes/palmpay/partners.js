@@ -1,5 +1,5 @@
 const express = require('express');
-const { store_infos } = require('../models');
+const { store_infos } = require('../../models');
 
 const router = express.Router();
 
@@ -38,7 +38,7 @@ router.get('/:id', async(req, res, next) => {
     console.error(error);
     next(error);
   }
-})
+});
 
 // PalmPos에서 메뉴판 등록하는 라우터
 // router.post('/enroll', async(req, res, next) => {

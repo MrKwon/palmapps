@@ -7,12 +7,13 @@ const morgan = require('morgan');
 
 // Router 연결부
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 
-const authRouter      = require('./routes/auth');
-const partnersRouter  = require('./routes/partners');
-const menuRouter      = require('./routes/menu');
-const orderRouter     = require('./routes/order');
+// palmpay 관련 라우터
+const authRouter      = require('./routes/palmpay/auth');
+const partnersRouter  = require('./routes/palmpay/partners');
+const menuRouter      = require('./routes/palmpay/menu');
+const orderRouter     = require('./routes/palmpay/order');
+const beaconRouter    = require('./routes/palmpay/beacon');
 
 // Sequelize, passport 연결부
 const { sequelize } = require('./models');
@@ -33,11 +34,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/',          indexRouter);
-app.use('/users',     usersRouter);
 app.use('/auth',      authRouter);
 app.use('/partners',  partnersRouter);
 app.use('/menu',      menuRouter);
 app.use('/order',     orderRouter);
+app.use('/beacon',    beaconRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,5 +1,5 @@
 const express = require('express');
-const { store_infos, menupans } = require('../models');
+const { store_infos, menupans } = require('../../models');
 
 const router = express.Router();
 

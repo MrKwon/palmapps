@@ -1,6 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
-const { member_infos } = require('../models');
+const { member_infos } = require('../../models');
 
 const router = express.Router();
 
