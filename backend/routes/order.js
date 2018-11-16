@@ -10,8 +10,8 @@ router.post('/send', async(req, res, next) => {
 
   const order_array = req.body;
 
-  console.log(req.body);
-  console.log(req.body.length);
+  // console.log(req.body);
+  // console.log(req.body.length);
 
   try{
     const user_info = await member_infos.find({
@@ -32,7 +32,7 @@ router.post('/send', async(req, res, next) => {
           menu_name: order_name,
         }
       });
-      console.log(menu_id.id);
+      // console.log(menu_id.id);
 
       await orderlists.create({
         menu_id: menu_id.id,
@@ -59,7 +59,7 @@ router.post('/send', async(req, res, next) => {
 router.post('/noworderlist', async(req, res, next) => {
   // 요청자의 이메일 주소를 받아와서
   const req_email = req.body.email;
-  console.log(req_email);
+  // console.log(req_email);
 
   try {
     // 요청자의 이메일 주소에 해당하는 id 를 찾고
@@ -69,7 +69,7 @@ router.post('/noworderlist', async(req, res, next) => {
         email: req_email,
       }
     });
-    console.log(req_id_json.id);
+    // console.log(req_id_json.id);
 
     const reqester_id = req_id_json.id; // orderer
 
@@ -95,16 +95,16 @@ router.post('/noworderlist', async(req, res, next) => {
     //                  * count
     let result_json_array = [ ];
     for(let i = 0; i < tmp_json_array.length; i++ ) {
-      console.log(">>>>>>>>>>>>>", i);
+      // console.log(">>>>>>>>>>>>>", i);
       const { orderee_id, createdAt, menu_id, count } = tmp_json_array[i];
       const tmp_store_name = await store_infos.findOne({
         attributes: ['store_name'],
         where: {
           id: orderee_id
         }
-      })
-      const ordered_store_name = JSON.parse(JSON.stringify(tmp_store_name)).store_name_id;
-      console.log(ordered_store_name);
+      });
+      const ordered_store_name = JSON.parse(JSON.stringify(tmp_store_name)).store_name;
+      // console.log(ordered_store_name);
 
       const tmp_menu_info = await menupans.findOne({
         attributes: ['menu_name', 'menu_price'],
@@ -123,7 +123,7 @@ router.post('/noworderlist', async(req, res, next) => {
         ordered_price: ordered_menu_price * count,
       }
 
-      console.log(to_result_json);
+      // console.log(to_result_json);
 
       result_json_array.push(to_result_json);
     }
@@ -144,7 +144,7 @@ router.post('/noworderlist', async(req, res, next) => {
 router.post('/pastorderlist', async(req, res, next) => {
   // 요청자의 이메일 주소를 받아와서
   const req_email = req.body.email;
-  console.log(req_email);
+  // console.log(req_email);
 
   try {
     // 요청자의 이메일 주소에 해당하는 id 를 찾고
@@ -154,7 +154,7 @@ router.post('/pastorderlist', async(req, res, next) => {
         email: req_email,
       }
     });
-    console.log(req_id_json.id);
+    // console.log(req_id_json.id);
 
     const reqester_id = req_id_json.id; // orderer
 
@@ -180,7 +180,7 @@ router.post('/pastorderlist', async(req, res, next) => {
     //                  * count
     let result_json_array = [ ];
     for(let i = 0; i < tmp_json_array.length; i++ ) {
-      console.log(">>>>>>>>>>>>>", i);
+      // console.log(">>>>>>>>>>>>>", i);
       const { orderee_id, createdAt, menu_id, count } = tmp_json_array[i];
       const tmp_store_name = await store_infos.findOne({
         attributes: ['store_name'],
@@ -188,8 +188,8 @@ router.post('/pastorderlist', async(req, res, next) => {
           id: orderee_id
         }
       })
-      const ordered_store_name = JSON.parse(JSON.stringify(tmp_store_name)).store_name_id;
-      console.log(ordered_store_name);
+      const ordered_store_name = JSON.parse(JSON.stringify(tmp_store_name)).store_name;
+      // console.log(ordered_store_name);
 
       const tmp_menu_info = await menupans.findOne({
         attributes: ['menu_name', 'menu_price'],
@@ -208,7 +208,7 @@ router.post('/pastorderlist', async(req, res, next) => {
         ordered_price: ordered_menu_price * count,
       }
 
-      console.log(to_result_json);
+      // console.log(to_result_json);
 
       result_json_array.push(to_result_json);
     }
@@ -226,7 +226,10 @@ router.patch('/complete/:id', async(req, res, next) => {
   const order_id = req.params.id;
 
   try {
-    const result = await 
+    const result = 0;
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
 });
 

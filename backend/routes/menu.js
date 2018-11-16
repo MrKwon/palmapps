@@ -35,7 +35,7 @@ router.get('/:store_id/menupans', async(req, res, next) => {
   try {
     const store_menupans = await menupans.findAll({
       where: {
-        store_name: store_id,
+        store_name_id: store_id,
       }
     });
 

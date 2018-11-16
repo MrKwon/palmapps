@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     paytype: {
       type: DataTypes.ENUM,
-      values: ['palmcredit', 'card', 'coupon', 'account'],
+      values: ['palmcredit', 'card', 'coupon', 'account', 'kakao', 'toss'],
       allowNull: false,
     },
     complete: {

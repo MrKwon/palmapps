@@ -15,10 +15,30 @@ router.get('/', async(req, res, next) => {
     return res.end(json);
 
   } catch (error) {
-    console.log(error);
+    console.error(error);
     next(error);
   }
 });
+
+router.get('/:id', async(req, res, next) => {
+  const store_id = req.params.id;
+
+  try {
+    const store_name = await store_infos.findOne({
+      attributes: ['store_name'],
+      where: {
+        id: store_id
+      }
+    });
+
+    const json = JSON.stringify(store_name);
+
+    return res.end(json);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+})
 
 // PalmPos에서 메뉴판 등록하는 라우터
 // router.post('/enroll', async(req, res, next) => {
