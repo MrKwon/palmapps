@@ -19,16 +19,16 @@ db.menupans = require('./menu')(sequelize, Sequelize);
 // 가독성이 너무 떨어짐
 
 // orderlist 에는 orderer column에 member의 id 가 foreignKey로 등록됨
-db.member_infos.hasMany(db.orderlists, { foreignKey: 'orderer', sourceKey: 'id' });
-db.orderlists.belongsTo(db.member_infos, { foreignKey: 'orderer', targetKey: 'id' });
+db.member_infos.hasMany(db.orderlists, { foreignKey: 'orderer_id', sourceKey: 'id' });
+db.orderlists.belongsTo(db.member_infos, { foreignKey: 'orderer_id', targetKey: 'id' });
 
 // orderlist 에는 orderee column에 store의 id 가 foreignKey로 등록됨
-db.store_infos.hasMany(db.orderlists, { foreignKey: 'orderee', sourceKey: 'id' });
-db.orderlists.belongsTo(db.store_infos, { foreignKey: 'orderee', targetKey: 'id' });
+db.store_infos.hasMany(db.orderlists, { foreignKey: 'orderee_id', sourceKey: 'id' });
+db.orderlists.belongsTo(db.store_infos, { foreignKey: 'orderee_id', targetKey: 'id' });
 
 // store_info 하나가 menupan에 여러개의 store_name 들을 가지고 있음
-db.store_infos.hasMany(db.menupans, { foreignKey: 'store_name', sourceKey: 'id' });
-db.menupans.belongsTo(db.store_infos, { foreignKey: 'store_name', targetKey: 'id' });
+db.store_infos.hasMany(db.menupans, { foreignKey: 'store_name_id', sourceKey: 'id' });
+db.menupans.belongsTo(db.store_infos, { foreignKey: 'store_name_id', targetKey: 'id' });
 
 // menupans id 하나가 orderlist에 여러 개의 order_name 들을 가지고 있음
 db.menupans.hasMany(db.orderlists, { foreignKey: 'menu_id', sourceKey: 'id' });

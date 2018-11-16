@@ -10,21 +10,21 @@ router.post('/send', async(req, res, next) => {
 
   const order_array = req.body;
 
-  console.log(req.body);
-  console.log(req.body.length);
+  // console.log(req.body);
+  // console.log(req.body.length);
 
   try{
-    const userinfo = await member_infos.find({
+    const user_info = await member_infos.find({
       attributes: ['id'],
       where: {
         email: order_array[0].email
       }
     });
 
-    const username_id = userinfo.id;
+    const username_id = user_info.id;
 
     for ( let i = 0; i < order_array.length; i++) {
-      const { order_name, order_count, orderee, paytype } = order_array[i];
+      const { order_name, order_count, orderee_id, paytype } = order_array[i];
 
       const menu_id = await menupans.findOne({
         attributes: ['id'],
@@ -32,14 +32,14 @@ router.post('/send', async(req, res, next) => {
           menu_name: order_name,
         }
       });
-      console.log(menu_id.id);
+      // console.log(menu_id.id);
 
       await orderlists.create({
         menu_id: menu_id.id,
         count: order_count,
-        orderer: username_id,
+        orderer_id: username_id,
         paytype,
-        orderee
+        orderee_id,
       });
     }
 
@@ -59,7 +59,7 @@ router.post('/send', async(req, res, next) => {
 router.post('/noworderlist', async(req, res, next) => {
   // 요청자의 이메일 주소를 받아와서
   const req_email = req.body.email;
-  console.log(req_email);
+  // console.log(req_email);
 
   try {
     // 요청자의 이메일 주소에 해당하는 id 를 찾고
@@ -69,7 +69,7 @@ router.post('/noworderlist', async(req, res, next) => {
         email: req_email,
       }
     });
-    console.log(req_id_json.id);
+    // console.log(req_id_json.id);
 
     const reqester_id = req_id_json.id; // orderer
 
@@ -77,9 +77,9 @@ router.post('/noworderlist', async(req, res, next) => {
     // complete 속성이 0인 모든 row 들을 orderee orderer, menu, count, createdAt 을
     // JsonArray 형식으로 불러옴 - 여러개이기 때문에
     const user_orderlist = await orderlists.findAll({
-      attributes: ['orderee', 'createdAt', 'menu_id', 'count' ],
+      attributes: ['orderee_id', 'createdAt', 'menu_id', 'count' ],
       where: {
-        orderer: reqester_id,
+        orderer_id: reqester_id,
         complete: { [Op.eq]: 0 },
       }
     });
@@ -95,16 +95,16 @@ router.post('/noworderlist', async(req, res, next) => {
     //                  * count
     let result_json_array = [ ];
     for(let i = 0; i < tmp_json_array.length; i++ ) {
-      console.log(">>>>>>>>>>>>>", i);
-      const { orderee, createdAt, menu_id, count } = tmp_json_array[i];
+      // console.log(">>>>>>>>>>>>>", i);
+      const { orderee_id, createdAt, menu_id, count } = tmp_json_array[i];
       const tmp_store_name = await store_infos.findOne({
         attributes: ['store_name'],
         where: {
-          id: orderee
+          id: orderee_id
         }
-      })
+      });
       const ordered_store_name = JSON.parse(JSON.stringify(tmp_store_name)).store_name;
-      console.log(ordered_store_name);
+      // console.log(ordered_store_name);
 
       const tmp_menu_info = await menupans.findOne({
         attributes: ['menu_name', 'menu_price'],
@@ -123,7 +123,7 @@ router.post('/noworderlist', async(req, res, next) => {
         ordered_price: ordered_menu_price * count,
       }
 
-      console.log(to_result_json);
+      // console.log(to_result_json);
 
       result_json_array.push(to_result_json);
     }
@@ -144,7 +144,7 @@ router.post('/noworderlist', async(req, res, next) => {
 router.post('/pastorderlist', async(req, res, next) => {
   // 요청자의 이메일 주소를 받아와서
   const req_email = req.body.email;
-  console.log(req_email);
+  // console.log(req_email);
 
   try {
     // 요청자의 이메일 주소에 해당하는 id 를 찾고
@@ -154,7 +154,7 @@ router.post('/pastorderlist', async(req, res, next) => {
         email: req_email,
       }
     });
-    console.log(req_id_json.id);
+    // console.log(req_id_json.id);
 
     const reqester_id = req_id_json.id; // orderer
 
@@ -162,9 +162,9 @@ router.post('/pastorderlist', async(req, res, next) => {
     // complete 속성이 0인 모든 row 들을 orderee orderer, menu, count, createdAt 을
     // JsonArray 형식으로 불러옴 - 여러개이기 때문에
     const user_orderlist = await orderlists.findAll({
-      attributes: ['orderee', 'createdAt', 'menu_id', 'count' ],
+      attributes: ['orderee_id', 'createdAt', 'menu_id', 'count' ],
       where: {
-        orderer: reqester_id,
+        orderer_id: reqester_id,
         complete: { [Op.eq]: 1 },
       }
     });
@@ -180,16 +180,16 @@ router.post('/pastorderlist', async(req, res, next) => {
     //                  * count
     let result_json_array = [ ];
     for(let i = 0; i < tmp_json_array.length; i++ ) {
-      console.log(">>>>>>>>>>>>>", i);
-      const { orderee, createdAt, menu_id, count } = tmp_json_array[i];
+      // console.log(">>>>>>>>>>>>>", i);
+      const { orderee_id, createdAt, menu_id, count } = tmp_json_array[i];
       const tmp_store_name = await store_infos.findOne({
         attributes: ['store_name'],
         where: {
-          id: orderee
+          id: orderee_id
         }
       })
       const ordered_store_name = JSON.parse(JSON.stringify(tmp_store_name)).store_name;
-      console.log(ordered_store_name);
+      // console.log(ordered_store_name);
 
       const tmp_menu_info = await menupans.findOne({
         attributes: ['menu_name', 'menu_price'],
@@ -208,19 +208,26 @@ router.post('/pastorderlist', async(req, res, next) => {
         ordered_price: ordered_menu_price * count,
       }
 
-      console.log(to_result_json);
+      // console.log(to_result_json);
 
       result_json_array.push(to_result_json);
     }
 
     const json = JSON.stringify(result_json_array);
-    // console.log(reqester_orderlist.body);
-    // console.log(reqester_orderlist.params);
-
-    // const json = JSON.stringify(req_orderlist);
     return res.end(json);
 
   } catch(error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.patch('/complete/:id', async(req, res, next) => {
+  const order_id = req.params.id;
+
+  try {
+    const result = 0;
+  } catch (error) {
     console.error(error);
     next(error);
   }
