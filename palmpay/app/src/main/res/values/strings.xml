@@ -8,7 +8,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="index_introduce">내 손 안에서\n이루어지는\n편리한 주문 결제</string>
+    <string name="index_introduce">내 손 안에서 하는\n편리한 주문 결제</string>
 
     <!--회원가입-->
     <string name="ID">아이디 (이메일)</string>

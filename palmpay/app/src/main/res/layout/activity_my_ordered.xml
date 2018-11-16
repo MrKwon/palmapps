@@ -11,17 +11,15 @@
     <TextView
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="?attr/actionBarSize"
         android:text="@string/ordered_title"
-        android:textSize="@dimen/xlarge_text"
+        android:textSize="@dimen/large_text"
         android:textColor="@color/black"
         android:gravity="center"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginRight="@dimen/margin_08"
-        android:layout_marginLeft="@dimen/margin_08"
         android:background="#D8D8D8"/>
 
     <LinearLayout
@@ -57,11 +55,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginRight="@dimen/margin_08"
-        android:layout_marginLeft="@dimen/margin_08"
         android:background="#D8D8D8"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/myOrderedSwipeRefresher"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

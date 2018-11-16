@@ -1,6 +1,7 @@
 package kr.palmapps.palmpay_dev_ver4;
 
 import android.content.SharedPreferences;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyOrderedActivity extends AppCompatActivity implements View.OnClickListener {
+public class MyOrderedActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -38,6 +39,7 @@ public class MyOrderedActivity extends AppCompatActivity implements View.OnClick
 
     RecyclerView recyclerView_myorder;
     RecyclerView.LayoutManager layoutManager_myorder;
+    SwipeRefreshLayout myOrderedSwipeRefresher;
 
     ArrayList<MyOrderListItem> myOrderNowList = new ArrayList<>();
     ArrayList<MyOrderListItem> myOrderPastList = new ArrayList<>();
@@ -73,6 +75,17 @@ public class MyOrderedActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    @Override
+    public void onRefresh() {
+        if (isNowOrderListClicked) {
+            getNowOrderList();
+            myOrderedSwipeRefresher.setRefreshing(false);
+        } else {
+            getPastOrderList();
+            myOrderedSwipeRefresher.setRefreshing(false);
+        }
+    }
+
     public void setViewButtons() {
         ordered_now_list = (TextView) findViewById(R.id.ordered_now_list);
         ordered_now_list.setOnClickListener(this);
@@ -104,6 +117,9 @@ public class MyOrderedActivity extends AppCompatActivity implements View.OnClick
 
         layoutManager_myorder = new LinearLayoutManager(this);
         recyclerView_myorder.setLayoutManager(layoutManager_myorder);
+
+        myOrderedSwipeRefresher = (SwipeRefreshLayout) findViewById(R.id.myOrderedSwipeRefresher);
+        myOrderedSwipeRefresher.setOnRefreshListener(this);
     }
 
     public void orderListRVAdapterSetter(ArrayList<MyOrderListItem> orderList) {
@@ -186,7 +202,7 @@ public class MyOrderedActivity extends AppCompatActivity implements View.OnClick
             String ordered_store_name = tmpObject.get("ordered_store_name").getAsString();
             // 시간은 임시 구현, 수정 필요
             String time       = tmpObject.get("ordered_time").getAsString();
-            String ordered_time = time.substring(0, 10) + "\n" + time.substring(12, 16);
+            String ordered_time = time.substring(0, 10) + " " + time.substring(11, 16);
             String ordered_menu_name  = tmpObject.get("ordered_menu_name").getAsString();
             String ordered_count      = tmpObject.get("ordered_count").getAsString();
             String ordered_price      = tmpObject.get("ordered_price").getAsString();
@@ -210,7 +226,7 @@ public class MyOrderedActivity extends AppCompatActivity implements View.OnClick
             String ordered_store_name = tmpObject.get("ordered_store_name").getAsString();
             // 시간은 임시 구현, 수정 필요
             String time       = tmpObject.get("ordered_time").getAsString();
-            String ordered_time = time.substring(0, 10) + "\n" + time.substring(12, 16);
+            String ordered_time = time.substring(0, 10) + " " + time.substring(11, 16);
             String ordered_menu_name  = tmpObject.get("ordered_menu_name").getAsString();
             String ordered_count      = tmpObject.get("ordered_count").getAsString();
             String ordered_price      = tmpObject.get("ordered_price").getAsString();
