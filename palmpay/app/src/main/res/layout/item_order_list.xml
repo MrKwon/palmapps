@@ -3,14 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_basic_white_stroke_grey"
     android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/order_img"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginTop="@dimen/margin_16"
-        android:layout_marginBottom="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_04"
+        android:layout_marginBottom="@dimen/margin_04"
         android:layout_marginLeft="@dimen/margin_16"
         android:layout_marginRight="@dimen/margin_04"
         android:src="@drawable/ic_photo_black_24dp"
@@ -21,8 +22,8 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:layout_weight="1"
-        android:layout_marginTop="@dimen/margin_16"
-        android:layout_marginBottom="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_04"
+        android:layout_marginBottom="@dimen/margin_04"
         android:layout_marginRight="@dimen/margin_04"
         android:orientation="vertical">
 

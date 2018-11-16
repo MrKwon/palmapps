@@ -14,7 +14,8 @@
         android:id="@+id/content_main_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomLayout">
+        android:layout_above="@+id/bottomLayout"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     </android.support.v7.widget.RecyclerView>
 
@@ -26,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:background="@color/palmOrderButtonPart"
+        android:background="@drawable/bg_button_container"
         android:visibility="visible">
 
         <Button
@@ -34,7 +35,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/normalorder"/>
+            android:layout_margin="@dimen/margin_04"
+            android:text="@string/normalorder"
+            android:background="@drawable/btn_main_order"/>
 
         <ImageButton
             android:id="@+id/fab"
@@ -50,7 +53,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/palmorder"/>
+            android:layout_margin="@dimen/margin_04"
+            android:text="@string/palmorder"
+            android:background="@drawable/btn_main_order"/>
 
     </LinearLayout>
 
