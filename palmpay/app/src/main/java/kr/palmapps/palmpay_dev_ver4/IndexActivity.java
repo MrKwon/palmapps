@@ -45,10 +45,10 @@ public class IndexActivity extends AppCompatActivity {
     private Boolean autoSignIn = false;
     private String store_id;
 
-    // Beacon 관련
-    private Boolean isBeaconDetected = false;
-    private BeaconManager beaconManager;
-    private BeaconRegion region;
+//    // Beacon 관련
+//    private Boolean isBeaconDetected = false;
+//    private BeaconManager beaconManager;
+//    private BeaconRegion region;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +56,27 @@ public class IndexActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
 
-        setBeaconManager();
+//        DevLog.d(TAG, "setBeaconManager");
+//        setBeaconManager();
+//
+//        region = setBeaconBasicRegion();
 
-        region = new BeaconRegion("ranged region",
-                UUID.fromString("d316da35-fdca-4668-9a13-86fb2ac5bf35"),
-                null, null);
+//        getAutoSignInState();
 
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                DevLog.d(TAG, "AutoSignIn.State : " + autoSignIn.toString());
+//
+//                if (!autoSignIn) {
+//                    startSign();
+//
+//                } else {
+//                    startMain();
+//                }
+//            }
+//        }, 2500);
     }
 
     /**
@@ -75,6 +90,8 @@ public class IndexActivity extends AppCompatActivity {
         super.onStart();
 
         getAutoSignInState();
+
+//        setBeaconManager();
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -92,25 +109,25 @@ public class IndexActivity extends AppCompatActivity {
         }, 2500);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        SystemRequirementsChecker.checkWithDefaultDialogs(this);
-
-        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
-            @Override
-            public void onServiceReady() {
-                beaconManager.startRanging(region);
-            }
-        });
-    }
-
-    @Override
-    protected void onPause() {
-        beaconManager.stopRanging(region);
-        super.onPause();
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//
+//        SystemRequirementsChecker.checkWithDefaultDialogs(this);
+//
+//        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
+//            @Override
+//            public void onServiceReady() {
+//                beaconManager.startRanging(region);
+//            }
+//        });
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        beaconManager.stopRanging(region);
+//        super.onPause();
+//    }
 
     /**
      * 자동 로그인 설정 여부를 SharedPreference 에서 가져오는 메서드
@@ -137,67 +154,82 @@ public class IndexActivity extends AppCompatActivity {
 
     }
 
-    public void setBeaconManager() {
-        beaconManager = new BeaconManager(this);
-
-        beaconManager.setRangingListener(new BeaconManager.BeaconRangingListener() {
-            @Override
-            public void onBeaconsDiscovered(BeaconRegion beaconRegion, List<Beacon> list) {
-                if(!list.isEmpty()) {
-                    Beacon nearestBeacon = list.get(0);
-                    DevLog.d(TAG, "nearest Beacon RSSI : " + nearestBeacon.getRssi());
-
-                    if (!isBeaconDetected && nearestBeacon.getRssi() > -70) {
-                        isBeaconDetected = true;
-                        String store_beacon_info = String.valueOf(nearestBeacon.getMajor());
-                        DevLog.d(TAG, store_beacon_info);
-                        getStoreIdUsingBeacon(store_beacon_info);
-
-                    } else if (isBeaconDetected && nearestBeacon.getRssi() < -70) {
-                        isBeaconDetected = false;
-                    }
-                }
-            }
-        });
-    }
-
-
-    /**
-     * Beacon 의 Major 값을 통해 서버에서 store_id 를 찾는 메서드
-     * @param string
-     */
-    public void getStoreIdUsingBeacon(String string) {
-        RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
-        Call<JsonObject> call = remoteService.getStoreIdUsingBeacon(string);
-
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonObject jsonObject = response.body();
-
-                if (!jsonObject.isJsonNull()){
-                    String store_id = jsonObject.get("store_id").getAsString();
-                    setStoreId(store_id);
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "주문이 불가능한 지역입니다.", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }
-        });
-    }
-
-    /**
-     * store_id setter
-     * @param string setting 할 store_id
-     */
-    public void setStoreId(String string) {
-        store_id = string;
-    }
+//    public void setBeaconManager() {
+//        DevLog.d(TAG, "setBeaconManager Start");
+//        beaconManager = new BeaconManager(this);
+//
+//        beaconManager.setRangingListener(new BeaconManager.BeaconRangingListener() {
+//            @Override
+//            public void onBeaconsDiscovered(BeaconRegion beaconRegion, List<Beacon> list) {
+//                DevLog.d("setBeaconManager", list.toString());
+//                if(!list.isEmpty()) {
+//                    Beacon nearestBeacon = list.get(0);
+//                    DevLog.d(TAG, "setBeaconManager Beacon RSSI : " + nearestBeacon.getRssi());
+//
+//                    if (!isBeaconDetected && nearestBeacon.getRssi() > -70) {
+//                        DevLog.d(TAG, "setBeaconManager Detected");
+//                        isBeaconDetected = true;
+//
+//                        String store_beacon_info = String.valueOf(nearestBeacon.getMajor());
+//                        DevLog.d(TAG, store_beacon_info);
+//                        getStoreIdUsingBeacon(store_beacon_info);
+//
+//                    } else if (isBeaconDetected && nearestBeacon.getRssi() < -70) {
+//                        DevLog.d(TAG, "setBeaconManager Undetected");
+//                        isBeaconDetected = false;
+//
+//                    } else {
+//                        DevLog.d(TAG, "setBeaconManager 아무것도 안함");
+//                    }
+//                }
+//            }
+//        });
+//    }
+//
+//
+//    /**
+//     * Beacon 의 Major 값을 통해 서버에서 store_id 를 찾는 메서드
+//     * @param string
+//     */
+//    public void getStoreIdUsingBeacon(String string) {
+//        RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
+//        Call<JsonObject> call = remoteService.getStoreIdUsingBeacon(string);
+//
+//        call.enqueue(new Callback<JsonObject>() {
+//            @Override
+//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                JsonObject jsonObject = response.body();
+//
+//                if (!jsonObject.isJsonNull()){
+//                    String store_id = jsonObject.get("store_id").getAsString();
+//                    setStoreId(store_id);
+//
+//                } else {
+//                    Toast.makeText(getApplicationContext(), "주문이 불가능한 장소입니다.", Toast.LENGTH_LONG).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JsonObject> call, Throwable t) {
+//
+//            }
+//        });
+//    }
+//
+//    public BeaconRegion setBeaconBasicRegion(){
+//        BeaconRegion beaconRegion = new BeaconRegion("ranged region",
+//                UUID.fromString("D316DA35-FDCA-4668-9A13-86FB2AC5BF35"),
+//                null, null);
+//        return beaconRegion;
+//    }
+//
+//    /**
+//     * store_id setter
+//     * @param string setting 할 store_id
+//     */
+//    public void setStoreId(String string) {
+//        store_id = string;
+//    }
 
 
     /**
@@ -205,21 +237,21 @@ public class IndexActivity extends AppCompatActivity {
      * MainActivity를 실행하는 함수
      */
     public void startMain() {
-        if(store_id == null) {
+//        if(store_id == null) {
+//            Intent intent = new Intent(IndexActivity.this, MainActivity.class);
+//            intent.putExtra("isBeaconDetected", isBeaconDetected);
+//
+//            startActivity(intent);
+//            finish();
+//
+//        } else {
             Intent intent = new Intent(IndexActivity.this, MainActivity.class);
-            intent.putExtra("isBeaconDetected", isBeaconDetected);
+//            intent.putExtra("store_id", store_id);
+//            intent.putExtra("isBeaconDetected", isBeaconDetected);
 
             startActivity(intent);
             finish();
-
-        } else {
-            Intent intent = new Intent(IndexActivity.this, MainActivity.class);
-            intent.putExtra("store_id", store_id);
-            intent.putExtra("isBeaconDetected", isBeaconDetected);
-
-            startActivity(intent);
-            finish();
-        }
+//        }
     }
 
     /**

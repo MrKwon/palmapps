@@ -24,11 +24,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.estimote.coresdk.common.requirements.SystemRequirementsChecker;
+import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
+import com.estimote.coresdk.recognition.packets.Beacon;
+import com.estimote.coresdk.service.BeaconManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import kr.palmapps.palmpay_dev_ver4.Adapter.MenuRecyclerViewAdapter;
 import kr.palmapps.palmpay_dev_ver4.Adapter.OrderlistRecyclerViewAdapter;
@@ -54,7 +60,7 @@ public class MainActivity extends AppCompatActivity
     private final String TAG = this.getClass().getSimpleName();
 
     public Boolean isOpened = false;
-    public Boolean isBeaconDetected = false;
+//    public Boolean isBeaconDetected = false;
 
     // 화면 요소들
     Toolbar toolbar;
@@ -72,6 +78,15 @@ public class MainActivity extends AppCompatActivity
     TextView signin_email;
     TextView signin_username;
     TextView signin_nickname;
+
+
+    // Beacon 관련
+    private Boolean isBeaconDetected = false;
+    private BeaconManager beaconManager;
+    private BeaconRegion region;
+
+    private String store_id;
+
 
     // 뒤로가기 한번에 종료되는거 방지
     BackPressButtonHandler backPressButtonHandler;
@@ -100,11 +115,11 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = getIntent();
-        isBeaconDetected = Boolean.parseBoolean(intent.getStringExtra("isBeaconDetected"));
-//        DevLog.d(TAG, intent.getBooleanExtra("isBeaconDetected", ));
 
-//        dev_isBeaconDetectedController();
+        setBeaconManager();
+
+        region = setBeaconBasicRegion();
+
         setViewToolbar();
         setViewFloatingButton();
         setViewDrawer();
@@ -119,6 +134,104 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SystemRequirementsChecker.checkWithDefaultDialogs(this);
+
+        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
+            @Override
+            public void onServiceReady() {
+                beaconManager.startRanging(region);
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        beaconManager.stopRanging(region);
+        super.onPause();
+    }
+
+    public void setBeaconManager() {
+        DevLog.d(TAG, "setBeaconManager Start");
+        beaconManager = new BeaconManager(this);
+
+        beaconManager.setRangingListener(new BeaconManager.BeaconRangingListener() {
+            @Override
+            public void onBeaconsDiscovered(BeaconRegion beaconRegion, List<Beacon> list) {
+                DevLog.d("setBeaconManager", list.toString());
+                if(!list.isEmpty()) {
+                    Beacon nearestBeacon = list.get(0);
+                    DevLog.d(TAG, "setBeaconManager Beacon RSSI : " + nearestBeacon.getRssi());
+
+                    if (!isBeaconDetected && nearestBeacon.getRssi() > -70) {
+                        DevLog.d(TAG, "setBeaconManager Detected");
+                        isBeaconDetected = true;
+
+                        String store_beacon_info = String.valueOf(nearestBeacon.getMajor());
+                        DevLog.d(TAG, store_beacon_info);
+                        getStoreIdUsingBeacon(store_beacon_info);
+
+                    } else if (isBeaconDetected && nearestBeacon.getRssi() < -70) {
+                        DevLog.d(TAG, "setBeaconManager Undetected");
+                        isBeaconDetected = false;
+                    }
+                }
+            }
+        });
+    }
+
+
+    /**
+     * Beacon 의 Major 값을 통해 서버에서 store_id 를 찾는 메서드
+     * @param string
+     */
+    public void getStoreIdUsingBeacon(String string) {
+        DevLog.d(TAG + " getString", string);
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("store_id", string);
+
+        RemoteService remoteService = ServiceGenerator.createService(RemoteService.class);
+        Call<JsonObject> call = remoteService.getStoreIdUsingBeacon(jsonObject);
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonObject jsonObject = response.body();
+
+                if (!jsonObject.isJsonObject()){
+                    String store_id = jsonObject.get("store_id").getAsString();
+                    setStoreId(store_id);
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "주문이 불가능한 장소입니다.", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public BeaconRegion setBeaconBasicRegion(){
+        BeaconRegion beaconRegion = new BeaconRegion("ranged region",
+                UUID.fromString("D316DA35-FDCA-4668-9A13-86FB2AC5BF35"),
+                null, null);
+        return beaconRegion;
+    }
+
+    /**
+     * store_id setter
+     * @param string setting 할 store_id
+     */
+    public void setStoreId(String string) {
+        store_id = string;
+    }
 
     @Override
     public void onBackPressed() {
@@ -395,7 +508,7 @@ public class MainActivity extends AppCompatActivity
 
             String partner_name = tmpObject.get("store_name").getAsString();
             String partner_type = tmpObject.get("store_type").getAsString();
-            String partner_desc = tmpObject.get("desc").getAsString();
+            String partner_desc = tmpObject.get("store_desc").getAsString();
             DevLog.d(TAG, partner_name + " " + partner_type + " " + partner_desc);
 
             items = new PartnerListItem(partner_name, partner_type, partner_desc);
@@ -559,12 +672,11 @@ public class MainActivity extends AppCompatActivity
     /**
      * 구현 이전에 비콘 id 전달하는 메서드
      * 필요할 때만 실행되므로 if 문을 통해 extra 없는 경우는 검사하지 않아도 됨
-     * @return (String) 1 - 앤댄썸
+     * @return (String) 1 - 앤댄썸 / 2 - 빽가반점
      */
     public String getBeaconId() {
         String store_id;
-        Bundle extras = getIntent().getExtras();
-        store_id = extras.getString("store_id");
+        store_id = setStoreId();
 
         return store_id;
     }
