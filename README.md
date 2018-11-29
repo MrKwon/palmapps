@@ -1,4 +1,4 @@
-# !!EXPIRED PROJECT!!palmapps
+# 다시 한번 살려보자 ! palmapps
 ~~palmapps - PalmPay, PalmPos Frontend and Backend~~
 
 ## 백 할 일 정리
