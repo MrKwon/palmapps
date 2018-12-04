@@ -1,1 +1,3 @@
-backend/config/config.json
+backend/config/
+backend/package-lock.json
+backend/package.json
